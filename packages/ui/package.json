@@ -10,8 +10,6 @@
   "dependencies": {
     "@app/domain": "workspace:*",
     "@base-ui/react": "1.9.0",
-    "@fluentui/react-components": "^9.75.2",
-    "@fluentui/react-icons": "^2.0.0",
     "@tanstack/react-table": "9.3.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",

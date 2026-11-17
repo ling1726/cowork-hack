@@ -1,13 +1,17 @@
 import type { DataTab } from '@app/domain';
+import { cn } from '../lib/utils.ts';
+import { formatDateTimeSeconds, formatEuro, formatNumber } from '../format.ts';
 import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
-  TableHeaderCell,
   TableRow,
-} from '@fluentui/react-components';
-import { formatDateTimeSeconds, formatEuro, formatNumber } from '../format.ts';
+} from '../primitives/table.tsx';
+
+const isNumeric = (type: DataTab['columns'][number]['type']) =>
+  type === 'number' || type === 'currency';
 
 function formatCell(
   type: DataTab['columns'][number]['type'],
@@ -28,23 +32,32 @@ function formatCell(
 
 export function DataTabTable({ tab }: { tab: DataTab }) {
   return (
-    <Table size="small" aria-label={tab.title} data-testid="data-table">
-      <TableHeader>
-        <TableRow>
-          {tab.columns.map((c) => (
-            <TableHeaderCell key={c.key}>{c.label}</TableHeaderCell>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {tab.rows.map((row, i) => (
-          <TableRow key={i} data-testid="data-row">
+    <div className="overflow-hidden rounded-lg border">
+      <Table aria-label={tab.title} data-testid="data-table">
+        <TableHeader className="bg-muted/50">
+          <TableRow>
             {tab.columns.map((c) => (
-              <TableCell key={c.key}>{formatCell(c.type, row[c.key])}</TableCell>
+              <TableHead key={c.key} className={cn(isNumeric(c.type) && 'text-right')}>
+                {c.label}
+              </TableHead>
             ))}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {tab.rows.map((row, i) => (
+            <TableRow key={i} data-testid="data-row">
+              {tab.columns.map((c) => (
+                <TableCell
+                  key={c.key}
+                  className={cn(isNumeric(c.type) && 'text-right tabular-nums')}
+                >
+                  {formatCell(c.type, row[c.key])}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

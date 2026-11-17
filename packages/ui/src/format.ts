@@ -18,3 +18,12 @@ export function nameOf(users: readonly User[], id: string): string {
   if (id === 'system') return 'System';
   return users.find((u) => u.id === id)?.name ?? id;
 }
+
+/** Up to two initials for an avatar: "Priya Shah" → "PS", "System" → "S". */
+export function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? '')
+    .join('');
+}

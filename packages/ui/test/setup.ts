@@ -4,7 +4,7 @@ import { afterEach } from 'vitest';
 
 afterEach(() => cleanup());
 
-// Fluent UI observes element sizes; jsdom has no ResizeObserver.
+// UI primitives may observe element sizes; jsdom has no ResizeObserver.
 class ResizeObserverStub {
   observe() {}
   unobserve() {}

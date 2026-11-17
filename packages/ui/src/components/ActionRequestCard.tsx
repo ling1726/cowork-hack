@@ -5,40 +5,24 @@ import {
   type ActionRequestStatus,
   type AlertSummary,
 } from '@app/domain';
-import { Badge, Button, Card, Input, Text, makeStyles, tokens } from '@fluentui/react-components';
+import { Bot } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { formatDateTime } from '../format.ts';
+import { Badge } from '../primitives/badge.tsx';
+import { Button } from '../primitives/button.tsx';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../primitives/card.tsx';
+import { Input } from '../primitives/input.tsx';
 
-const STATUS_COLOR: Record<ActionRequestStatus, 'warning' | 'success' | 'danger' | 'important'> = {
-  pending: 'warning',
-  approved: 'success',
-  rejected: 'danger',
-  failed: 'important',
+const STATUS_TONE: Record<ActionRequestStatus, string> = {
+  pending: 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400',
+  approved: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
+  rejected: 'border-destructive/30 bg-destructive/10 text-destructive',
+  failed: 'border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-400',
 };
 
-const useStyles = makeStyles({
-  card: { display: 'flex', flexDirection: 'column', gap: tokens.spacingVerticalS },
-  head: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: tokens.spacingHorizontalS,
-  },
-  label: { color: tokens.colorNeutralForeground2 },
-  preview: {
-    margin: 0,
-    padding: tokens.spacingVerticalS,
-    borderLeft: `3px solid ${tokens.colorBrandStroke1}`,
-    backgroundColor: tokens.colorNeutralBackground3,
-    whiteSpace: 'pre-wrap',
-  },
-  actions: {
-    display: 'flex',
-    gap: tokens.spacingHorizontalS,
-    alignItems: 'center',
-    flexWrap: 'wrap',
-  },
-});
+function Label({ children }: { children: ReactNode }) {
+  return <div className="text-xs font-medium text-muted-foreground">{children}</div>;
+}
 
 export interface ActionRequestCardProps {
   request: ActionRequest;
@@ -57,61 +41,81 @@ export function ActionRequestCard({
   busy,
   renderAlertLink,
 }: ActionRequestCardProps) {
-  const styles = useStyles();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
   const pending = request.status === 'pending';
 
   return (
-    <Card className={styles.card} data-testid="action-request-card" data-request-id={request.id}>
-      <div className={styles.head}>
-        <Text weight="semibold">{ACTION_REQUEST_KIND_LABELS[request.kind]}</Text>
-        <Badge data-testid="request-status" appearance="tint" color={STATUS_COLOR[request.status]}>
-          {ACTION_REQUEST_STATUS_LABELS[request.status]}
-        </Badge>
-      </div>
-      <Text size={200} className={styles.label}>
-        Requested by Claude for {request.onBehalfOf} · {formatDateTime(request.createdAt)} ·{' '}
-        {request.id}
-      </Text>
-      <div>{renderAlertLink(alert.id, `${alert.id} ${alert.title}`)}</div>
+    <Card data-testid="action-request-card" data-request-id={request.id}>
+      <CardHeader className="gap-1">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="flex items-center gap-2">
+            <Bot aria-hidden className="size-4 text-violet-600 dark:text-violet-400" />
+            {ACTION_REQUEST_KIND_LABELS[request.kind]}
+          </CardTitle>
+          <Badge
+            data-testid="request-status"
+            variant="outline"
+            className={STATUS_TONE[request.status]}
+          >
+            {ACTION_REQUEST_STATUS_LABELS[request.status]}
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Requested by Claude for {request.onBehalfOf} · {formatDateTime(request.createdAt)} ·{' '}
+          {request.id}
+        </p>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="text-sm font-medium">
+          {renderAlertLink(alert.id, `${alert.id} ${alert.title}`)}
+        </div>
 
-      <Text size={200} className={styles.label}>
-        Claude's rationale
-      </Text>
-      <Text data-testid="rationale">{request.rationale}</Text>
+        <div className="flex flex-col gap-1">
+          <Label>Claude's rationale</Label>
+          <p className="text-sm" data-testid="rationale">
+            {request.rationale}
+          </p>
+        </div>
 
-      {request.kind === 'add_comment' ? (
-        <>
-          <Text size={200} className={styles.label}>
-            Comment to be posted
-          </Text>
-          <blockquote className={styles.preview} data-testid="payload-preview">
-            {request.payload.body}
-          </blockquote>
-        </>
-      ) : (
-        <Text size={200} className={styles.label}>
-          Moves the alert to In Progress.
-        </Text>
-      )}
+        {request.kind === 'add_comment' ? (
+          <div className="flex flex-col gap-1">
+            <Label>Comment to be posted</Label>
+            <blockquote
+              className="rounded-r-md border-l-2 border-violet-500/60 bg-muted/50 px-3 py-2 text-sm whitespace-pre-wrap"
+              data-testid="payload-preview"
+            >
+              {request.payload.body}
+            </blockquote>
+          </div>
+        ) : (
+          <Label>Moves the alert to In Progress.</Label>
+        )}
 
-      {request.status === 'failed' && request.failure && (
-        <Text data-testid="failure">Could not be applied: {request.failure.message}</Text>
-      )}
-      {request.status === 'rejected' && request.rejectReason && (
-        <Text data-testid="reject-reason">Reason: {request.rejectReason}</Text>
-      )}
+        {request.status === 'failed' && request.failure && (
+          <p
+            className="rounded-md bg-orange-500/10 px-3 py-2 text-sm text-orange-800 dark:text-orange-300"
+            data-testid="failure"
+          >
+            Could not be applied: {request.failure.message}
+          </p>
+        )}
+        {request.status === 'rejected' && request.rejectReason && (
+          <p className="text-sm text-muted-foreground" data-testid="reject-reason">
+            Reason: {request.rejectReason}
+          </p>
+        )}
+      </CardContent>
 
       {pending && (onApprove || onReject) && (
-        <div className={styles.actions}>
+        <CardFooter className="flex flex-wrap items-center gap-2">
           {onApprove && (
-            <Button appearance="primary" disabled={busy} onClick={onApprove}>
+            <Button disabled={busy} onClick={onApprove}>
               Approve
             </Button>
           )}
           {onReject && !rejecting && (
-            <Button disabled={busy} onClick={() => setRejecting(true)}>
+            <Button variant="outline" disabled={busy} onClick={() => setRejecting(true)}>
               Reject
             </Button>
           )}
@@ -120,10 +124,12 @@ export function ActionRequestCard({
               <Input
                 aria-label="Rejection reason"
                 placeholder="Reason (optional)"
+                className="w-64"
                 value={reason}
-                onChange={(_e, d) => setReason(d.value)}
+                onChange={(e) => setReason(e.target.value)}
               />
               <Button
+                variant="destructive"
                 disabled={busy}
                 onClick={() => {
                   onReject(reason.trim() || undefined);
@@ -133,12 +139,12 @@ export function ActionRequestCard({
               >
                 Confirm reject
               </Button>
-              <Button appearance="subtle" onClick={() => setRejecting(false)}>
+              <Button variant="ghost" onClick={() => setRejecting(false)}>
                 Cancel
               </Button>
             </>
           )}
-        </div>
+        </CardFooter>
       )}
     </Card>
   );

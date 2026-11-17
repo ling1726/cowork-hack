@@ -4,31 +4,11 @@ import {
   type TimelineEvent,
   type User,
 } from '@app/domain';
-import { Text, makeStyles, tokens } from '@fluentui/react-components';
 import type { ReactNode } from 'react';
+import { cn } from '../lib/utils.ts';
 import { formatDateTime, nameOf } from '../format.ts';
+import { UserAvatar } from './UserAvatar.tsx';
 import { ViaClaudeTag } from './ViaClaudeTag.tsx';
-
-const useStyles = makeStyles({
-  list: {
-    listStyleType: 'none',
-    margin: 0,
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacingVerticalM,
-  },
-  item: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacingVerticalXXS,
-    paddingLeft: tokens.spacingHorizontalM,
-    borderLeft: `2px solid ${tokens.colorNeutralStroke2}`,
-  },
-  head: { display: 'flex', alignItems: 'center', gap: tokens.spacingHorizontalS, flexWrap: 'wrap' },
-  body: { whiteSpace: 'pre-wrap' },
-  reason: { color: tokens.colorNeutralForeground2 },
-});
 
 export interface AlertTimelineProps {
   events: TimelineEvent[];
@@ -38,8 +18,6 @@ export interface AlertTimelineProps {
 }
 
 export function AlertTimeline({ events, users, renderLink }: AlertTimelineProps) {
-  const styles = useStyles();
-
   const describe = (e: TimelineEvent): { summary: ReactNode; detail?: string } => {
     switch (e.type) {
       case 'created':
@@ -81,28 +59,45 @@ export function AlertTimeline({ events, users, renderLink }: AlertTimelineProps)
   };
 
   return (
-    <ol className={styles.list} data-testid="timeline">
-      {events.map((e) => {
+    <ol className="flex flex-col" data-testid="timeline">
+      {events.map((e, i) => {
         const { summary, detail } = describe(e);
+        const actor = nameOf(users, e.actorId);
+        const last = i === events.length - 1;
         return (
-          <li key={e.id} className={styles.item} data-testid="timeline-event">
-            <div className={styles.head}>
-              <Text weight="semibold">{nameOf(users, e.actorId)}</Text>
-              <Text size={200} className={styles.reason}>
-                {formatDateTime(e.at)}
-              </Text>
-              {e.via === 'claude' && (
-                <ViaClaudeTag
-                  {...(e.approvedBy ? { approvedByName: nameOf(users, e.approvedBy) } : {})}
-                />
+          <li
+            key={e.id}
+            className="relative flex gap-3 pb-5 last:pb-0"
+            data-testid="timeline-event"
+          >
+            {!last && (
+              <span aria-hidden className="absolute top-8 bottom-0 left-3 w-px bg-border" />
+            )}
+            <UserAvatar name={actor} />
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                <span className="font-medium">{actor}</span>
+                <span className="text-xs text-muted-foreground">{formatDateTime(e.at)}</span>
+                {e.via === 'claude' && (
+                  <ViaClaudeTag
+                    {...(e.approvedBy ? { approvedByName: nameOf(users, e.approvedBy) } : {})}
+                  />
+                )}
+              </div>
+              <div className="text-sm">{summary}</div>
+              {detail && (
+                <p
+                  className={cn(
+                    'text-sm',
+                    e.type === 'comment'
+                      ? 'rounded-lg border bg-muted/40 px-3 py-2 whitespace-pre-wrap'
+                      : 'text-muted-foreground',
+                  )}
+                >
+                  {detail}
+                </p>
               )}
             </div>
-            <Text>{summary}</Text>
-            {detail && (
-              <Text block className={e.type === 'comment' ? styles.body : styles.reason}>
-                {detail}
-              </Text>
-            )}
           </li>
         );
       })}

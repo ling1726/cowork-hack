@@ -1,10 +1,9 @@
 import type { ActionRequest, Alert, AlertSummary, DataTab, TimelineEvent, User } from '@app/domain';
-import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   ActionRequestCard,
@@ -17,11 +16,12 @@ import {
   AssigneesPanel,
   DataTabTable,
   SeverityBadge,
+  StatCard,
   ViaClaudeTag,
+  primaryAction,
 } from '../src/index.ts';
 
-const renderUi = (ui: ReactElement) =>
-  render(<FluentProvider theme={webLightTheme}>{ui}</FluentProvider>);
+const renderUi = (ui: ReactElement) => render(ui);
 
 const users: User[] = [
   { id: 'U-01', name: 'Priya Shah', role: 'analyst', desk: 'eu-equities', initials: 'PS' },
@@ -162,13 +162,24 @@ describe('@app/ui', () => {
     expect(screen.getByText('Critical')).toBeInTheDocument();
   });
 
+  it('SeverityBadge and AlertStatusBadge expose their value for styling', () => {
+    renderUi(
+      <>
+        <AlertStatusBadge status="in_progress" />
+        <SeverityBadge severity="critical" />
+      </>,
+    );
+    expect(screen.getByTestId('severity-badge')).toHaveAttribute('data-severity', 'critical');
+    expect(screen.getByTestId('status-badge')).toHaveAttribute('data-status', 'in_progress');
+  });
+
   it('ViaClaudeTag renders "via Claude" and optionally "approved by"', () => {
     const { rerender } = renderUi(<ViaClaudeTag />);
     expect(screen.getByText('via Claude')).toBeInTheDocument();
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ViaClaudeTag approvedByName="Priya Shah" />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.getByText('via Claude · approved by Priya Shah')).toBeInTheDocument();
   });
@@ -188,11 +199,59 @@ describe('@app/ui', () => {
     expect(screen.getByText('ALT-1042')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Acknowledge' }));
     expect(onAction).toHaveBeenCalledWith('acknowledge');
-    // Only lifecycle and escalate actions are header buttons.
-    expect(screen.getByRole('button', { name: 'Escalate' })).toBeInTheDocument();
+    // Only lifecycle and escalate actions are header actions; the rest live in More actions.
+    expect(screen.queryByRole('button', { name: 'Escalate' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Comment' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Edit assignees' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+    expect(await screen.findByRole('menuitem', { name: 'Escalate' })).toBeInTheDocument();
+    expect(screen.queryByRole('menuitem', { name: 'Comment' })).toBeNull();
+  });
+
+  it('primaryAction prefers acknowledge, else the first allowed action', () => {
+    expect(primaryAction(['close', 'acknowledge'])).toBe('acknowledge');
+    expect(primaryAction(['reopen'])).toBe('reopen');
+    expect(primaryAction([])).toBeUndefined();
+  });
+
+  it('AlertHeader puts the other actions in More actions', async () => {
+    const onAction = vi.fn();
+    renderUi(
+      <AlertHeader
+        alert={summary}
+        actions={['acknowledge', 'close', 'escalate']}
+        onAction={onAction}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Acknowledge' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: 'Close' }));
+    expect(onAction).toHaveBeenCalledWith('close');
+  });
+
+  it('AlertHeader with one action shows no More actions', () => {
+    renderUi(<AlertHeader alert={summary} actions={['reopen']} onAction={() => {}} />);
+    expect(screen.getByRole('button', { name: 'Reopen' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'More actions' })).toBeNull();
+  });
+
+  it('StatCard shows a skeleton, never 0, while loading', () => {
+    const link = (href: string, children: ReactNode) => <a href={href}>{children}</a>;
+    const { rerender } = renderUi(
+      <StatCard label="Open" value={undefined} href="/alerts?status=open" renderLink={link} />,
+    );
+    const card = screen.getByTestId('stat-card');
+    expect(card).not.toHaveTextContent('0');
+    expect(within(card).getByTestId('stat-skeleton')).toBeInTheDocument();
+    rerender(<StatCard label="Open" value={7} href="/alerts?status=open" renderLink={link} />);
+    expect(screen.getByTestId('stat-card')).toHaveTextContent('7');
+    expect(screen.getByTestId('stat-card')).toHaveTextContent('Open');
+    expect(screen.getByRole('link', { name: /Open/ })).toHaveAttribute(
+      'href',
+      '/alerts?status=open',
+    );
   });
 
   it('AlertHeader shows a pending count when Claude has requests waiting', () => {
@@ -318,16 +377,65 @@ describe('@app/ui', () => {
     );
     // Going from a sorted state to none (a text search switches to relevance) must not crash.
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <AlertTable
           items={[summary]}
           onSortChange={onSortChange}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     await userEvent.click(screen.getByText('Severity'));
     expect(onSortChange).toHaveBeenCalledWith('-severity');
+  });
+
+  it('AlertTable has Created and Updated sort headers', async () => {
+    const onSortChange = vi.fn();
+    const { rerender } = renderUi(
+      <AlertTable
+        items={[summary]}
+        onSortChange={onSortChange}
+        renderAlertLink={(id) => <span>{id}</span>}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Created' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('-createdAt');
+    rerender(
+      <AlertTable
+        items={[summary]}
+        sort="-createdAt"
+        onSortChange={onSortChange}
+        renderAlertLink={(id) => <span>{id}</span>}
+      />,
+    );
+    expect(screen.getByRole('columnheader', { name: /Created/ })).toHaveAttribute(
+      'aria-sort',
+      'descending',
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Created' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('createdAt');
+    await userEvent.click(screen.getByRole('button', { name: 'Updated' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('-updatedAt');
+  });
+
+  it('AlertTable rows call onRowClick, and the ID link does not double-fire', async () => {
+    const onRowClick = vi.fn();
+    renderUi(
+      <AlertTable
+        items={[summary]}
+        onRowClick={onRowClick}
+        renderAlertLink={(id, label) => (
+          <a href={`#${id}`} onClick={(e) => e.preventDefault()}>
+            {label}
+          </a>
+        )}
+      />,
+    );
+    await userEvent.click(screen.getByText('Possible layering in SAP GY by T-0412'));
+    expect(onRowClick).toHaveBeenCalledWith('ALT-1042');
+    onRowClick.mockClear();
+    await userEvent.click(screen.getByRole('link', { name: 'ALT-1042' }));
+    expect(onRowClick).not.toHaveBeenCalled();
   });
 
   it('DataTabTable formats cells by column type', () => {
@@ -403,7 +511,7 @@ describe('@app/ui', () => {
     expect(screen.getByRole('button', { name: 'Approve' })).toBeDisabled();
     const decided: ActionRequest = { ...pending, status: 'approved', decidedBy: 'U-01' };
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ActionRequestCard
           request={decided}
           alert={summary}
@@ -411,7 +519,7 @@ describe('@app/ui', () => {
           onReject={() => {}}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.queryByRole('button', { name: 'Approve' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull();
@@ -435,13 +543,13 @@ describe('@app/ui', () => {
     );
     expect(screen.getByText(/Cannot acknowledge an alert that is in_progress/)).toBeInTheDocument();
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ActionRequestCard
           request={{ ...pending, status: 'rejected', rejectReason: 'Not now.' }}
           alert={summary}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.getByText(/Not now\./)).toBeInTheDocument();
   });
