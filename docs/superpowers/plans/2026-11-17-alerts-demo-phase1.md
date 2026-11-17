@@ -6,7 +6,7 @@
 
 **Architecture:** A pnpm TypeScript monorepo. `@app/domain` holds Zod schemas, the state machine and the link builder. `apps/server` is a Hono + zod-openapi REST API over an in-memory, deterministically seeded store, with agent detection and an access queue. `@app/api-client` (openapi-fetch) is shared by `apps/web` (Vite, React, Fluent v9, TanStack Router/Query, Zustand) and `apps/mcp-server` (MCP SDK, Streamable HTTP). Presentational components live in `@app/ui` so phase 2 can reuse them in Cowork.
 
-**Tech Stack:** Node ≥22 (dev on 25), pnpm 10+, TypeScript 6.0, zod 4, hono 4 + @hono/zod-openapi 1 + @hono/node-server, minisearch 7, @faker-js/faker 10, openapi-typescript 7 + openapi-fetch 0.17, React 19, @fluentui/react-components 9, @tanstack/react-router 1 + router-plugin, @tanstack/react-query 5, zustand 5, Vite 8, Vitest 5, @playwright/test 1.65, @modelcontextprotocol/sdk 1.32, Biome 2, tsx, concurrently.
+**Tech Stack:** Node ≥22 (dev on 25), pnpm 10+, TypeScript 6.0, zod 4, hono 4 + @hono/zod-openapi 1 + @hono/node-server, minisearch 7, @faker-js/faker 10, openapi-typescript 7 + openapi-fetch 0.17, React 19, @fluentui/react-components 9, @tanstack/react-router 1 + router-plugin, @tanstack/react-query 5, zustand 5, Vite 8, Vitest 5, @playwright/test 1.65, @modelcontextprotocol/sdk 1.32, oxlint (lint), oxfmt (format), tsx, concurrently.
 
 **Spec:** `docs/superpowers/specs/2026-11-17-alerts-demo-design.md` (read it with this plan). Supporting: `docs/rehearsal-workflows.md`, `docs/why-mcp.md`.
 
@@ -37,7 +37,7 @@
 ## File Map
 
 ```
-package.json, pnpm-workspace.yaml, tsconfig.base.json, tsconfig.json (references), biome.json, vitest.workspace.ts, .env.example, .gitignore, README.md
+package.json, pnpm-workspace.yaml, tsconfig.base.json, tsconfig.json (references), .oxlintrc.json, .oxfmtrc.json, vitest.workspace.ts, .env.example, .gitignore, README.md
 packages/domain/src/{index,enums,schemas,search-params,state-machine,links}.ts   test/*.test.ts
 packages/api-client/src/{index,schema.d.ts}                                     test/client.test.ts
 packages/ui/src/{index.ts, components/*.tsx}                                    test/*.test.tsx
@@ -79,7 +79,7 @@ Spec §14. This gates Task 17's transport and plugin choices. **It needs the use
 ### Task 2: Monorepo scaffold and domain schemas
 
 **Files:**
-- Create: root `package.json`, `pnpm-workspace.yaml` (`packages/*`, `apps/*`), `tsconfig.base.json`, `tsconfig.json`, `biome.json`, `vitest.workspace.ts`, `.gitignore` (node_modules, dist, test-results, playwright-report, .env), `.env.example`
+- Create: root `package.json`, `pnpm-workspace.yaml` (`packages/*`, `apps/*`), `tsconfig.base.json`, `tsconfig.json`, `.oxlintrc.json`, `.oxfmtrc.json`, `vitest.workspace.ts`, `.gitignore` (node_modules, dist, test-results, playwright-report, .env), `.env.example`
 - Create: `packages/domain/{package.json,tsconfig.json}`, `src/enums.ts`, `src/schemas.ts`, `src/index.ts`
 - Test: `packages/domain/test/schemas.test.ts`
 
@@ -120,9 +120,11 @@ Spec §14. This gates Task 17's transport and plugin choices. **It needs the use
     - `dev` = `concurrently -n server,web,mcp "pnpm --filter @app/server dev" "pnpm --filter @app/web dev" "pnpm --filter @app/mcp-server dev"`
     - `test` = `vitest run`
     - `typecheck` = `tsc -b`
-    - `lint` = `biome check .`
+    - `lint` = `oxlint && oxfmt --check`
+    - `format` = `oxfmt`
     - `e2e` = `pnpm --filter @app/web e2e`
   - Set `"packageManager": "pnpm@<current>"` and `"engines": {"node": ">=22"}`.
+  - Add `oxlint` and `oxfmt` as root devDependencies. Configure `.oxlintrc.json` (TypeScript and React plugins, `correctness` as errors) and `.oxfmtrc.json`. Ignore generated files in both (`packages/api-client/src/schema.d.ts`, `packages/api-client/src/openapi.json`, `dist`, `test-results`, `playwright-report`).
   - Run `corepack enable && pnpm install`.
 - [ ] **Step 2: Write the failing test** `packages/domain/test/schemas.test.ts`:
 

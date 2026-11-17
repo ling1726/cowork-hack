@@ -309,7 +309,7 @@ A throwaway check that a Streamable HTTP MCP server on `localhost` (one hello-wo
 
 - File-based vs code-based TanStack Router routes. Exact component layout and visual polish within Fluent defaults.
 - Exact background seed content (it must stay realistic for hedge fund trade surveillance and deterministic).
-- Lint/format setup (Biome is recommended for speed and simplicity).
+- Lint/format setup (decided: oxlint for linting, oxfmt for formatting).
 - Whether `e2e/` lives at the root or inside `apps/web`.
 - Pagination style and default page size.
 - `@hono/mcp` vs the SDK's Node transport, after checking the current versions.
