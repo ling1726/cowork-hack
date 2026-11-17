@@ -6,3 +6,5 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@hono/node-server@2.1.9'
   - hono@4.13.19
+  - '@tanstack/query-core@5.107.2'
+  - '@tanstack/react-query@5.107.2'

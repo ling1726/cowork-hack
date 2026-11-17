@@ -11,6 +11,7 @@
     "docs",
     "packages/api-client/src/schema.d.ts",
     "packages/api-client/src/openapi.json",
-    ".superpowers"
+    ".superpowers",
+    "apps/web/src/routeTree.gen.ts"
   ]
 }

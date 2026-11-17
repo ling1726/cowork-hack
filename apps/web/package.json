@@ -1,0 +1,34 @@
+{
+  "name": "@app/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173 --strictPort",
+    "build": "vite build",
+    "routes": "tsr generate",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@app/api-client": "workspace:*",
+    "@app/domain": "workspace:*",
+    "@app/ui": "workspace:*",
+    "@fluentui/react-components": "^9.75.2",
+    "@fluentui/react-icons": "^2.0.0",
+    "@tanstack/react-query": "^5.107.2",
+    "@tanstack/react-router": "^1.170.46",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@tanstack/router-cli": "^1.168.0",
+    "@tanstack/router-plugin": "^1.169.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "vite": "^8.3.8"
+  }
+}

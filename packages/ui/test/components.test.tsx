@@ -293,6 +293,30 @@ describe('@app/ui', () => {
     expect(onSortChange).toHaveBeenCalledWith('severity');
   });
 
+  it('AlertTable renders without a sort (relevance order) and still reports sort changes', async () => {
+    const onSortChange = vi.fn();
+    const { rerender } = renderUi(
+      <AlertTable
+        items={[summary]}
+        sort="-createdAt"
+        onSortChange={onSortChange}
+        renderAlertLink={(id) => <span>{id}</span>}
+      />,
+    );
+    // Going from a sorted state to none (a text search switches to relevance) must not crash.
+    rerender(
+      <FluentProvider theme={webLightTheme}>
+        <AlertTable
+          items={[summary]}
+          onSortChange={onSortChange}
+          renderAlertLink={(id) => <span>{id}</span>}
+        />
+      </FluentProvider>,
+    );
+    await userEvent.click(screen.getByText('Severity'));
+    expect(onSortChange).toHaveBeenCalledWith('-severity');
+  });
+
   it('DataTabTable formats cells by column type', () => {
     const tab: DataTab = {
       id: 'orders',
