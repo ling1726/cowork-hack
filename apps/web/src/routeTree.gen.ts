@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsIndexRouteImport } from './routes/alerts.index'
 import { Route as AlertsAlertIdRouteImport } from './routes/alerts.$alertId'
 import { Route as QueueIndexRouteImport } from './routes/queue.index'
+import { Route as QueueRequestIdRouteImport } from './routes/queue.$requestId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,16 +35,23 @@ const QueueIndexRoute = QueueIndexRouteImport.update({
   path: '/queue/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QueueRequestIdRoute = QueueRequestIdRouteImport.update({
+  id: '/queue/$requestId',
+  path: '/queue/$requestId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts/$alertId': typeof AlertsAlertIdRoute
+  '/queue/$requestId': typeof QueueRequestIdRoute
   '/alerts/': typeof AlertsIndexRoute
   '/queue/': typeof QueueIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts/$alertId': typeof AlertsAlertIdRoute
+  '/queue/$requestId': typeof QueueRequestIdRoute
   '/alerts': typeof AlertsIndexRoute
   '/queue': typeof QueueIndexRoute
 }
@@ -51,20 +59,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts/$alertId': typeof AlertsAlertIdRoute
+  '/queue/$requestId': typeof QueueRequestIdRoute
   '/alerts/': typeof AlertsIndexRoute
   '/queue/': typeof QueueIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alerts/$alertId' | '/alerts/' | '/queue/'
+  fullPaths:
+    '/' | '/alerts/$alertId' | '/queue/$requestId' | '/alerts/' | '/queue/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alerts/$alertId' | '/alerts' | '/queue'
-  id: '__root__' | '/' | '/alerts/$alertId' | '/alerts/' | '/queue/'
+  to: '/' | '/alerts/$alertId' | '/queue/$requestId' | '/alerts' | '/queue'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts/$alertId'
+    | '/queue/$requestId'
+    | '/alerts/'
+    | '/queue/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsAlertIdRoute: typeof AlertsAlertIdRoute
+  QueueRequestIdRoute: typeof QueueRequestIdRoute
   AlertsIndexRoute: typeof AlertsIndexRoute
   QueueIndexRoute: typeof QueueIndexRoute
 }
@@ -99,12 +116,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QueueIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/queue/$requestId': {
+      id: '/queue/$requestId'
+      path: '/queue/$requestId'
+      fullPath: '/queue/$requestId'
+      preLoaderRoute: typeof QueueRequestIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsAlertIdRoute: AlertsAlertIdRoute,
+  QueueRequestIdRoute: QueueRequestIdRoute,
   AlertsIndexRoute: AlertsIndexRoute,
   QueueIndexRoute: QueueIndexRoute,
 }
