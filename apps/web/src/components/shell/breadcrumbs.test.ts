@@ -15,4 +15,11 @@ describe('breadcrumbsFor', () => {
     ]);
     expect(breadcrumbsFor('/nope')).toEqual([]);
   });
+
+  it('never throws on a malformed escape in the path', () => {
+    expect(breadcrumbsFor('/alerts/50%ZZ')).toEqual([
+      { label: 'Alerts', to: '/alerts' },
+      { label: '50%ZZ' },
+    ]);
+  });
 });
