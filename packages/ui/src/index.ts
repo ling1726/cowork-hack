@@ -9,7 +9,8 @@ export { AssigneesPanel, type AssigneesPanelProps } from './components/Assignees
 export { DataTabTable } from './components/DataTabTable.tsx';
 export { SeverityBadge } from './components/SeverityBadge.tsx';
 export { ViaClaudeTag } from './components/ViaClaudeTag.tsx';
-export { formatDateTime, nameOf } from './format.ts';
+export { formatDateTime, initialsOf, nameOf } from './format.ts';
+export { UserAvatar } from './components/UserAvatar.tsx';
 
 // shadcn/ui primitives (Base UI) and the class helper.
 export { cn } from './lib/utils.ts';

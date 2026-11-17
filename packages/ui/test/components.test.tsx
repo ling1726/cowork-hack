@@ -162,6 +162,17 @@ describe('@app/ui', () => {
     expect(screen.getByText('Critical')).toBeInTheDocument();
   });
 
+  it('SeverityBadge and AlertStatusBadge expose their value for styling', () => {
+    renderUi(
+      <>
+        <AlertStatusBadge status="in_progress" />
+        <SeverityBadge severity="critical" />
+      </>,
+    );
+    expect(screen.getByTestId('severity-badge')).toHaveAttribute('data-severity', 'critical');
+    expect(screen.getByTestId('status-badge')).toHaveAttribute('data-status', 'in_progress');
+  });
+
   it('ViaClaudeTag renders "via Claude" and optionally "approved by"', () => {
     const { rerender } = renderUi(<ViaClaudeTag />);
     expect(screen.getByText('via Claude')).toBeInTheDocument();

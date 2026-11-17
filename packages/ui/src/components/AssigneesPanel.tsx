@@ -1,21 +1,37 @@
 import { USER_ROLE_LABELS, type Assignees, type User } from '@app/domain';
-import { Button, Persona, Text, makeStyles, tokens } from '@fluentui/react-components';
+import type { ReactNode } from 'react';
+import { Pencil } from 'lucide-react';
 import { formatDateTime, nameOf } from '../format.ts';
+import { Button } from '../primitives/button.tsx';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '../primitives/card.tsx';
+import { UserAvatar } from './UserAvatar.tsx';
 
-const useStyles = makeStyles({
-  root: { display: 'flex', flexDirection: 'column', gap: tokens.spacingVerticalS },
-  head: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  row: { display: 'flex', flexDirection: 'column', gap: tokens.spacingVerticalXXS },
-});
-
-function Who({ users, id, role }: { users: readonly User[]; id: string; role?: string }) {
+function Who({ users, id }: { users: readonly User[]; id: string }) {
   const user = users.find((u) => u.id === id);
+  const name = nameOf(users, id);
   return (
-    <Persona
-      size="small"
-      name={nameOf(users, id)}
-      secondaryText={role ?? (user ? USER_ROLE_LABELS[user.role] : undefined)}
-    />
+    <div className="flex items-center gap-2.5">
+      <UserAvatar name={name} />
+      <div className="min-w-0">
+        <div className="truncate text-sm font-medium">{name}</div>
+        {user && (
+          <div className="truncate text-xs text-muted-foreground">
+            {USER_ROLE_LABELS[user.role]}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Group({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+        {label}
+      </div>
+      {children}
+    </div>
   );
 }
 
@@ -26,38 +42,39 @@ export interface AssigneesPanelProps {
 }
 
 export function AssigneesPanel({ assignees, users, onEdit }: AssigneesPanelProps) {
-  const styles = useStyles();
   return (
-    <section className={styles.root} data-testid="assignees-panel" aria-label="Assignees">
-      <div className={styles.head}>
-        <Text weight="semibold">Assignees</Text>
+    <Card size="sm" role="region" data-testid="assignees-panel" aria-label="Assignees">
+      <CardHeader>
+        <CardTitle>Assignees</CardTitle>
         {onEdit && (
-          <Button size="small" appearance="subtle" onClick={onEdit} aria-label="Edit assignees">
-            Edit
-          </Button>
+          <CardAction>
+            <Button size="sm" variant="ghost" onClick={onEdit} aria-label="Edit assignees">
+              <Pencil />
+              Edit
+            </Button>
+          </CardAction>
         )}
-      </div>
-      <div className={styles.row}>
-        <Text size={200}>Primary</Text>
-        <Who users={users} id={assignees.primaryId} />
-      </div>
-      <div className={styles.row}>
-        <Text size={200}>Backup</Text>
-        <Who users={users} id={assignees.backupId} />
-      </div>
-      {assignees.escalatedTo.length > 0 && (
-        <div className={styles.row}>
-          <Text size={200}>Escalated to</Text>
-          {assignees.escalatedTo.map((e) => (
-            <div key={e.userId} data-testid="escalation">
-              <Who users={users} id={e.userId} />
-              <Text size={200} block>
-                {e.reason} · by {nameOf(users, e.byUserId)} · {formatDateTime(e.at)}
-              </Text>
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <Group label="Primary">
+          <Who users={users} id={assignees.primaryId} />
+        </Group>
+        <Group label="Backup">
+          <Who users={users} id={assignees.backupId} />
+        </Group>
+        {assignees.escalatedTo.length > 0 && (
+          <Group label="Escalated to">
+            {assignees.escalatedTo.map((e) => (
+              <div key={e.userId} data-testid="escalation" className="flex flex-col gap-1">
+                <Who users={users} id={e.userId} />
+                <p className="text-xs text-muted-foreground">
+                  {e.reason} · by {nameOf(users, e.byUserId)} · {formatDateTime(e.at)}
+                </p>
+              </div>
+            ))}
+          </Group>
+        )}
+      </CardContent>
+    </Card>
   );
 }

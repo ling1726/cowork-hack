@@ -1,24 +1,25 @@
 import type { Highlight } from '@app/domain';
-import { Card, Text, makeStyles, tokens } from '@fluentui/react-components';
+import { cn } from '../lib/utils.ts';
+import { Card } from '../primitives/card.tsx';
 
-const useStyles = makeStyles({
-  row: { display: 'flex', gap: tokens.spacingHorizontalM, flexWrap: 'wrap' },
-  card: { minWidth: '150px' },
-  neutral: {},
-  warning: { color: tokens.colorPaletteDarkOrangeForeground1 },
-  danger: { color: tokens.colorPaletteRedForeground1 },
-});
+const TONE = {
+  neutral: 'text-foreground',
+  warning: 'text-amber-600 dark:text-amber-400',
+  danger: 'text-destructive',
+} as const;
 
 export function AlertHighlights({ highlights }: { highlights: Highlight[] }) {
-  const styles = useStyles();
   return (
-    <div className={styles.row} data-testid="highlights">
+    <div
+      className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3"
+      data-testid="highlights"
+    >
       {highlights.map((h) => (
-        <Card key={h.label} className={styles.card} size="small" data-testid="highlight">
-          <Text size={200}>{h.label}</Text>
-          <Text size={600} weight="semibold" className={styles[h.tone ?? 'neutral']}>
+        <Card key={h.label} size="sm" className="gap-1 px-4 py-3" data-testid="highlight">
+          <span className="text-xs font-medium text-muted-foreground">{h.label}</span>
+          <span className={cn('text-2xl font-semibold tabular-nums', TONE[h.tone ?? 'neutral'])}>
             {h.value}
-          </Text>
+          </span>
         </Card>
       ))}
     </div>
