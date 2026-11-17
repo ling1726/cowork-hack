@@ -3,6 +3,7 @@
   "references": [
     { "path": "packages/domain" },
     { "path": "apps/server" },
-    { "path": "packages/api-client" }
+    { "path": "packages/api-client" },
+    { "path": "packages/ui" }
   ]
 }
