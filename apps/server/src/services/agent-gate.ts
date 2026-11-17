@@ -1,9 +1,8 @@
 import {
   checkTransition,
   type ActionRequest,
+  type ActionRequestDetail,
   type Alert,
-  type AlertSummary,
-  type TimelineEvent,
   type Via,
 } from '@app/domain';
 import { ApiError } from '../errors.ts';
@@ -92,11 +91,6 @@ export function submitOrApply(
   });
   return { kind: 'queued', actionRequest };
 }
-
-export type ActionRequestDetail = ActionRequest & {
-  alert: AlertSummary;
-  resultEvent?: TimelineEvent;
-};
 
 export function requestDetail(store: Store, request: ActionRequest): ActionRequestDetail {
   const alert = requireAlert(store, request.alertId);

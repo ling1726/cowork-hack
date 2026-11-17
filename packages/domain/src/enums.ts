@@ -96,6 +96,15 @@ export const Via = z.enum(['app', 'claude']);
 export type Via = z.infer<typeof Via>;
 export const VIA_LABELS: Record<Via, string> = { app: 'App', claude: 'Claude' };
 
+/** Where a human decided one of Claude's requests: in the web app or on a card in Cowork. */
+export const DecisionSurface = z.enum(['app', 'cowork']);
+export type DecisionSurface = z.infer<typeof DecisionSurface>;
+/** Reads after a name: "Approved by Priya Shah in Cowork". */
+export const DECISION_SURFACE_LABELS: Record<DecisionSurface, string> = {
+  app: 'in the app',
+  cowork: 'in Cowork',
+};
+
 export const AlertTab = z.enum(['overview', 'timeline', 'materials', 'data']);
 export type AlertTab = z.infer<typeof AlertTab>;
 export const ALERT_TAB_LABELS: Record<AlertTab, string> = {
