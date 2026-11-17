@@ -10,3 +10,27 @@ export { DataTabTable } from './components/DataTabTable.tsx';
 export { SeverityBadge } from './components/SeverityBadge.tsx';
 export { ViaClaudeTag } from './components/ViaClaudeTag.tsx';
 export { formatDateTime, nameOf } from './format.ts';
+
+// shadcn/ui primitives (Base UI) and the class helper.
+export { cn } from './lib/utils.ts';
+export * from './primitives/avatar.tsx';
+export * from './primitives/badge.tsx';
+export * from './primitives/breadcrumb.tsx';
+export * from './primitives/button.tsx';
+export * from './primitives/card.tsx';
+export * from './primitives/checkbox.tsx';
+export * from './primitives/dialog.tsx';
+export * from './primitives/dropdown-menu.tsx';
+export * from './primitives/input.tsx';
+export * from './primitives/label.tsx';
+export * from './primitives/popover.tsx';
+export * from './primitives/select.tsx';
+export * from './primitives/separator.tsx';
+export * from './primitives/sheet.tsx';
+export * from './primitives/sidebar.tsx';
+export * from './primitives/skeleton.tsx';
+export * from './primitives/switch.tsx';
+export * from './primitives/table.tsx';
+export * from './primitives/tabs.tsx';
+export * from './primitives/textarea.tsx';
+export * from './primitives/tooltip.tsx';
