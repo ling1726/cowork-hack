@@ -115,9 +115,9 @@ Success: an analyst opening the app sees a polished, dense, modern dashboard in 
 - `packages/ui`
   - `components.json` for the shadcn CLI (Base UI, neutral, CSS variables, aliases into `src/`).
   - `src/primitives/*`: shadcn components as generated (button, badge, card, dialog, dropdown-menu, popover, select, tabs, table, input, textarea, switch, checkbox, label, separator, sidebar, sheet, tooltip, avatar, breadcrumb, skeleton, and whatever else the screens need).
-  - `src/lib/cn.ts` (`clsx` + `tailwind-merge`).
+  - `src/lib/utils.ts` exporting `cn` (`clsx` + `tailwind-merge`), the file shadcn generates.
   - `src/styles.css`: `@import "tailwindcss"`, `tw-animate-css`, the shadcn theme variables (light and `.dark`), and `@source` for the package's own `src`. Exported as `@app/ui/styles.css` (a second entry in the package's `exports`).
-  - `src/components/*`: the existing domain components, rewritten on the primitives, keeping their names and props unless a layout change needs new ones (for example `AlertTable` taking a sort callback). Plus a new `SummaryCard` for the overview cards, kept presentational.
+  - `src/components/*`: the existing domain components, rewritten on the primitives, keeping their names and props unless a layout change needs new ones (for example `AlertTable` taking a sort callback). Plus a new `StatCard` for the overview cards, kept presentational.
 - `apps/web`: `@tailwindcss/vite` in `vite.config.ts`, and `src/index.css` importing `@app/ui/styles.css`. Containers keep living in `apps/web/src/components`. The faceted filter, search box and pagination are web containers composed from `@app/ui` primitives, since they hold URL state.
 - Icons: `lucide-react` (shadcn's default), replacing `@fluentui/react-icons`.
 
@@ -126,7 +126,7 @@ Success: an analyst opening the app sees a polished, dense, modern dashboard in 
 Each PR passes `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm e2e`, and gets light and dark screenshots of the screens it touched, checked in the browser.
 
 1. **Setup.** Tailwind v4 and shadcn init in `@app/ui`, the primitives the stack needs, `styles.css`, the web app importing it, the dark class wired to the theme store (Fluent's provider still follows the same value), the narrowed import guard, and a TanStack Table v9 check (below). No screen changes yet, beyond whatever the preflight reset does to Fluent screens. Any test that preflight breaks gets fixed here.
-2. **Shared components.** Every `@app/ui` component rebuilt on shadcn + Tailwind, `AlertTable` on TanStack Table, the new `SummaryCard`. Component tests drop `FluentProvider` and keep asserting the same behaviour. Fluent leaves `@app/ui`.
+2. **Shared components.** Every `@app/ui` component rebuilt on shadcn + Tailwind, `AlertTable` on TanStack Table, the new `StatCard`. Component tests drop `FluentProvider` and keep asserting the same behaviour. Fluent leaves `@app/ui`.
 3. **Shell and alert list.** Sidebar layout, top bar, user switcher, settings dialog, summary cards, toolbar with faceted filters, table footer. E2E selectors for the status and severity filters change from Fluent's `menuitemcheckbox`.
 4. **Alert detail and dialogs.** Two-column layout, header actions, tabs, comment composer, materials, data tab, banner, all dialogs.
 5. **Queue and cleanup.** Queue pages and `RequestCard`. Remove the Fluent dependencies, `FluentProvider` and any leftovers. Update the phase 1 spec's stack lines and the README where they name Fluent.
@@ -135,7 +135,7 @@ Each PR passes `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm e2e`, and ge
 
 ## 8. Testing
 
-- Unit (`@app/ui`, jsdom): the existing component tests carry over with the same assertions. New tests cover the `AlertTable` sort callback (the next `AlertSort` value per header click), the row link, `SummaryCard`, and the primary-action choice in `AlertHeader`.
+- Unit (`@app/ui`, jsdom): the existing component tests carry over with the same assertions. New tests cover the `AlertTable` sort callback (the next `AlertSort` value per header click), the row link, `StatCard`, and the primary-action choice in `AlertHeader`.
 - E2E: the 52 specs stay, finding elements by role and accessible name. Selectors change only where a control changed type (the faceted filters, the actions dropdown on the detail page, the user switcher). Each changed selector is listed in its PR description. New specs: summary card numbers and links, the sidebar navigation, and the actions dropdown.
 - Visual: screenshots of the list, detail and queue in light and dark, at desktop and narrow widths, attached to PRs 3–5.
 
