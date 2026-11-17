@@ -125,3 +125,20 @@ test('a closed alert shows its resolution', async ({ page }) => {
   );
   await expect(page.getByTestId('resolution')).toContainText('Mei Lin');
 });
+
+test('details panel lists trader, instrument and rule', async ({ page }) => {
+  await page.goto('/alerts/ALT-1042');
+  const panel = page.getByTestId('details-panel');
+  await expect(panel).toContainText('T-0412');
+  await expect(panel).toContainText('SAP GY');
+  await expect(panel).toContainText('Layering');
+  await expect(panel).toContainText('EU Equities');
+});
+
+test('detail page has no horizontal page scroll at 390px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/alerts/ALT-1042?tab=data');
+  await expect(page.getByTestId('data-table')).toBeVisible();
+  const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+  expect(fits).toBe(true);
+});
