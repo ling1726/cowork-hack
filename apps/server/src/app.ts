@@ -2,9 +2,13 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { contextMiddleware, type Env } from './context.ts';
 import { ApiError, errorBody } from './errors.ts';
+import { registerActionRequests } from './routes/action-requests.ts';
 import { registerAdmin } from './routes/admin.ts';
 import { registerAlertsRead } from './routes/alerts-read.ts';
+import { registerAlertsWrite } from './routes/alerts-write.ts';
+import { registerAttachments } from './routes/attachments.ts';
 import { registerMeta } from './routes/meta.ts';
+import { registerSettings } from './routes/settings.ts';
 import { registerUsers } from './routes/users.ts';
 import type { Store } from './store/store.ts';
 
@@ -47,6 +51,10 @@ export function createApp(opts: AppOptions): OpenAPIHono<Env> {
   registerUsers(app);
   registerMeta(app);
   registerAlertsRead(app);
+  registerAlertsWrite(app);
+  registerAttachments(app);
+  registerActionRequests(app);
+  registerSettings(app);
   registerAdmin(app, { now, seed: opts.seed ?? 1042 });
 
   app.doc31('/api/openapi.json', {

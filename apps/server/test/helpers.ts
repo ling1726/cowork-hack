@@ -7,10 +7,17 @@ import { Store } from '../src/store/store.ts';
 export const T0 = new Date('2026-11-17T09:00:00.000Z');
 export const AGENT_TOKEN = 'test-agent-token';
 
-export function makeApp(now: Date = T0): { app: OpenAPIHono<Env>; store: Store } {
-  const store = new Store(buildSeed({ now, seed: 1042 }), () => now);
-  const app = createApp({ store, agentToken: AGENT_TOKEN, now: () => now, seed: 1042 });
-  return { app, store };
+/** A mutable clock so tests can advance time. */
+export interface Clock {
+  now: Date;
+}
+
+export function makeApp(start: Date = T0): { app: OpenAPIHono<Env>; store: Store; clock: Clock } {
+  const clock: Clock = { now: start };
+  const now = () => clock.now;
+  const store = new Store(buildSeed({ now: start, seed: 1042 }), now);
+  const app = createApp({ store, agentToken: AGENT_TOKEN, now, seed: 1042 });
+  return { app, store, clock };
 }
 
 export const asUser = (id: string): Record<string, string> => ({ 'X-User-Id': id });
