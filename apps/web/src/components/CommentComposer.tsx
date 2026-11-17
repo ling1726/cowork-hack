@@ -1,27 +1,11 @@
 import { unwrap } from '@app/api-client';
-import {
-  Button,
-  MessageBar,
-  MessageBarBody,
-  Textarea,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
+import { Button, Textarea } from '@app/ui';
+import { CircleAlert } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { api } from '../api.ts';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacingVerticalS,
-    alignItems: 'flex-start',
-  },
-});
-
 export function CommentComposer({ alertId }: { alertId: string }) {
-  const styles = useStyles();
   const queryClient = useQueryClient();
   const [text, setText] = useState('');
 
@@ -42,26 +26,26 @@ export function CommentComposer({ alertId }: { alertId: string }) {
   const body = text.trim();
   return (
     <form
-      className={styles.root}
+      className="flex flex-col items-end gap-2"
       onSubmit={(e) => {
         e.preventDefault();
         if (body) post.mutate(body);
       }}
     >
       {post.isError && (
-        <MessageBar intent="error">
-          <MessageBarBody>{post.error.message}</MessageBarBody>
-        </MessageBar>
+        <p role="alert" className="flex w-full items-center gap-2 text-sm text-destructive">
+          <CircleAlert className="size-4" />
+          {post.error.message}
+        </p>
       )}
       <Textarea
         aria-label="Add a comment"
-        placeholder="Add a comment"
+        placeholder="Add a comment…"
         value={text}
-        onChange={(_e, d) => setText(d.value)}
-        resize="vertical"
-        style={{ width: '100%' }}
+        onChange={(e) => setText(e.target.value)}
+        className="min-h-20 w-full"
       />
-      <Button type="submit" appearance="primary" disabled={!body || post.isPending}>
+      <Button type="submit" disabled={!body || post.isPending}>
         Post comment
       </Button>
     </form>

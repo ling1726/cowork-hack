@@ -1,21 +1,6 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogContent,
-  DialogSurface,
-  DialogTitle,
-  MessageBar,
-  MessageBarBody,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@app/ui';
+import { CircleAlert } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
-
-const useStyles = makeStyles({
-  fields: { display: 'flex', flexDirection: 'column', gap: tokens.spacingVerticalM },
-});
 
 export interface ActionDialogProps {
   title: string;
@@ -39,7 +24,6 @@ export function ActionDialog({
   onClose,
   children,
 }: ActionDialogProps) {
-  const styles = useStyles();
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState(false);
 
@@ -56,35 +40,39 @@ export function ActionDialog({
   };
 
   return (
-    <Dialog open onOpenChange={(_e, d) => !d.open && onClose()} modalType="modal">
-      <DialogSurface>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      {/* No corner X: "Close" must stay unique to the Close-alert action on the page. */}
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
         <form
+          className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
             if (canSubmit && !pending) void submit();
           }}
         >
-          <DialogBody>
+          <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent className={styles.fields}>
-              {error && (
-                <MessageBar intent="error">
-                  <MessageBarBody>{error}</MessageBarBody>
-                </MessageBar>
-              )}
-              {children}
-            </DialogContent>
-            <DialogActions>
-              <Button type="button" appearance="secondary" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" appearance="primary" disabled={!canSubmit || pending}>
-                {submitLabel}
-              </Button>
-            </DialogActions>
-          </DialogBody>
+          </DialogHeader>
+          {error && (
+            <p
+              role="alert"
+              className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
+              <CircleAlert className="mt-0.5 size-4 shrink-0" />
+              {error}
+            </p>
+          )}
+          <div className="flex flex-col gap-4">{children}</div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!canSubmit || pending}>
+              {submitLabel}
+            </Button>
+          </DialogFooter>
         </form>
-      </DialogSurface>
+      </DialogContent>
     </Dialog>
   );
 }
