@@ -48,16 +48,6 @@ const bodyRoute = <S extends z.ZodType>(
     responses,
   });
 
-const bodylessRoute = (path: string, summary: string) =>
-  createRoute({
-    method: 'post',
-    path,
-    summary,
-    tags: ['alerts'],
-    request: { params: IdParam },
-    responses,
-  });
-
 const GateResponses = {
   200: responses[200],
   202: {
