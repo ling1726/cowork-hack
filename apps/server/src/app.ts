@@ -4,6 +4,8 @@ import { contextMiddleware, type Env } from './context.ts';
 import { ApiError, errorBody } from './errors.ts';
 import { registerAdmin } from './routes/admin.ts';
 import { registerAlertsRead } from './routes/alerts-read.ts';
+import { registerAlertsWrite } from './routes/alerts-write.ts';
+import { registerAttachments } from './routes/attachments.ts';
 import { registerMeta } from './routes/meta.ts';
 import { registerUsers } from './routes/users.ts';
 import type { Store } from './store/store.ts';
@@ -47,6 +49,8 @@ export function createApp(opts: AppOptions): OpenAPIHono<Env> {
   registerUsers(app);
   registerMeta(app);
   registerAlertsRead(app);
+  registerAlertsWrite(app);
+  registerAttachments(app);
   registerAdmin(app, { now, seed: opts.seed ?? 1042 });
 
   app.doc31('/api/openapi.json', {
