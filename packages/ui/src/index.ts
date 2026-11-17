@@ -1,5 +1,5 @@
 export { ActionRequestCard, type ActionRequestCardProps } from './components/ActionRequestCard.tsx';
-export { AlertHeader, type AlertHeaderProps } from './components/AlertHeader.tsx';
+export { AlertHeader, primaryAction, type AlertHeaderProps } from './components/AlertHeader.tsx';
 export { AlertHighlights } from './components/AlertHighlights.tsx';
 export { AlertStatusBadge } from './components/AlertStatusBadge.tsx';
 export { AlertSummaryCard, type AlertSummaryCardProps } from './components/AlertSummaryCard.tsx';
@@ -8,6 +8,7 @@ export { AlertTimeline, type AlertTimelineProps } from './components/AlertTimeli
 export { AssigneesPanel, type AssigneesPanelProps } from './components/AssigneesPanel.tsx';
 export { DataTabTable } from './components/DataTabTable.tsx';
 export { SeverityBadge } from './components/SeverityBadge.tsx';
+export { StatCard, type StatCardProps } from './components/StatCard.tsx';
 export { ViaClaudeTag } from './components/ViaClaudeTag.tsx';
 export { formatDateTime, initialsOf, nameOf } from './format.ts';
 export { UserAvatar } from './components/UserAvatar.tsx';

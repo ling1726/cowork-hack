@@ -4,7 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   ActionRequestCard,
@@ -17,7 +17,9 @@ import {
   AssigneesPanel,
   DataTabTable,
   SeverityBadge,
+  StatCard,
   ViaClaudeTag,
+  primaryAction,
 } from '../src/index.ts';
 
 const renderUi = (ui: ReactElement) =>
@@ -199,11 +201,59 @@ describe('@app/ui', () => {
     expect(screen.getByText('ALT-1042')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Acknowledge' }));
     expect(onAction).toHaveBeenCalledWith('acknowledge');
-    // Only lifecycle and escalate actions are header buttons.
-    expect(screen.getByRole('button', { name: 'Escalate' })).toBeInTheDocument();
+    // Only lifecycle and escalate actions are header actions; the rest live in More actions.
+    expect(screen.queryByRole('button', { name: 'Escalate' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Comment' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Edit assignees' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+    expect(await screen.findByRole('menuitem', { name: 'Escalate' })).toBeInTheDocument();
+    expect(screen.queryByRole('menuitem', { name: 'Comment' })).toBeNull();
+  });
+
+  it('primaryAction prefers acknowledge, else the first allowed action', () => {
+    expect(primaryAction(['close', 'acknowledge'])).toBe('acknowledge');
+    expect(primaryAction(['reopen'])).toBe('reopen');
+    expect(primaryAction([])).toBeUndefined();
+  });
+
+  it('AlertHeader puts the other actions in More actions', async () => {
+    const onAction = vi.fn();
+    renderUi(
+      <AlertHeader
+        alert={summary}
+        actions={['acknowledge', 'close', 'escalate']}
+        onAction={onAction}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Acknowledge' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: 'Close' }));
+    expect(onAction).toHaveBeenCalledWith('close');
+  });
+
+  it('AlertHeader with one action shows no More actions', () => {
+    renderUi(<AlertHeader alert={summary} actions={['reopen']} onAction={() => {}} />);
+    expect(screen.getByRole('button', { name: 'Reopen' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'More actions' })).toBeNull();
+  });
+
+  it('StatCard shows a skeleton, never 0, while loading', () => {
+    const link = (href: string, children: ReactNode) => <a href={href}>{children}</a>;
+    const { rerender } = renderUi(
+      <StatCard label="Open" value={undefined} href="/alerts?status=open" renderLink={link} />,
+    );
+    const card = screen.getByTestId('stat-card');
+    expect(card).not.toHaveTextContent('0');
+    expect(within(card).getByTestId('stat-skeleton')).toBeInTheDocument();
+    rerender(<StatCard label="Open" value={7} href="/alerts?status=open" renderLink={link} />);
+    expect(screen.getByTestId('stat-card')).toHaveTextContent('7');
+    expect(screen.getByTestId('stat-card')).toHaveTextContent('Open');
+    expect(screen.getByRole('link', { name: /Open/ })).toHaveAttribute(
+      'href',
+      '/alerts?status=open',
+    );
   });
 
   it('AlertHeader shows a pending count when Claude has requests waiting', () => {

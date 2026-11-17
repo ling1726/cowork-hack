@@ -3,6 +3,16 @@ import { expect, test } from './fixtures.ts';
 
 const dialog = (page: Page) => page.getByRole('dialog');
 
+/** Header actions: the main one is a button, the others sit in the More actions menu. */
+const openAction = async (page: Page, name: string) => {
+  // Wait for the header before deciding where the action is.
+  await expect(page.getByTestId('status-badge')).toBeVisible();
+  const primary = page.getByRole('button', { name, exact: true });
+  if (await primary.isVisible()) return primary.click();
+  await page.getByRole('button', { name: 'More actions' }).click();
+  await page.getByRole('menuitem', { name, exact: true }).click();
+};
+
 test('acknowledge ALT-1042 → status In Progress, Acknowledge button gone', async ({ page }) => {
   await page.goto('/alerts/ALT-1042');
   await expect(page.getByTestId('status-badge')).toHaveText('Open');
@@ -18,7 +28,7 @@ test('W3 app side: escalate ALT-1013 to Daniel Okafor → escalated event, assig
   page,
 }) => {
   await page.goto('/alerts/ALT-1013');
-  await page.getByRole('button', { name: 'Escalate' }).click();
+  await openAction(page, 'Escalate');
   const d = dialog(page);
   const submit = d.getByRole('button', { name: 'Escalate' });
   await expect(submit).toBeDisabled();
@@ -41,13 +51,13 @@ test('W3 app side: escalate ALT-1013 to Daniel Okafor → escalated event, assig
 
 test('an already-escalated user is not offered again', async ({ page }) => {
   await page.goto('/alerts/ALT-1013');
-  await page.getByRole('button', { name: 'Escalate' }).click();
+  await openAction(page, 'Escalate');
   await dialog(page).getByRole('combobox', { name: 'Escalate to' }).click();
   await page.getByRole('option', { name: 'Daniel Okafor' }).click();
   await dialog(page).getByRole('textbox', { name: 'Reason' }).fill('x');
   await dialog(page).getByRole('button', { name: 'Escalate' }).click();
   await expect(dialog(page)).toHaveCount(0);
-  await page.getByRole('button', { name: 'Escalate' }).click();
+  await openAction(page, 'Escalate');
   await dialog(page).getByRole('combobox', { name: 'Escalate to' }).click();
   await expect(page.getByRole('option', { name: 'Sarah Klein' })).toBeVisible();
   await expect(page.getByRole('option', { name: 'Daniel Okafor' })).toHaveCount(0);
@@ -55,7 +65,7 @@ test('an already-escalated user is not offered again', async ({ page }) => {
 
 test('close requires outcome and note; closed alert offers Reopen', async ({ page }) => {
   await page.goto('/alerts/ALT-1013');
-  await page.getByRole('button', { name: 'Close', exact: true }).click();
+  await openAction(page, 'Close');
   const d = dialog(page);
   const submit = d.getByRole('button', { name: 'Close alert' });
   await expect(submit).toBeDisabled();
@@ -94,13 +104,36 @@ test('W4 app side: reopen ALT-0987 requires a reason; timeline shows Closed → 
   await expect(page.getByTestId('resolution')).toHaveCount(0);
 });
 
-test('header buttons come from allowedActions only', async ({ page }) => {
+test('header actions come from allowedActions only', async ({ page }) => {
+  // Closed: Reopen is the only action, so there is no menu.
   await page.goto('/alerts/ALT-0987');
   await expect(page.getByRole('button', { name: 'Reopen' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'More actions' })).toHaveCount(0);
   for (const name of ['Acknowledge', 'Escalate']) {
     await expect(page.getByRole('button', { name })).toHaveCount(0);
   }
   await expect(page.getByRole('button', { name: 'Close', exact: true })).toHaveCount(0);
+  // Open: Acknowledge is the button; More actions holds Escalate only.
+  await page.goto('/alerts/ALT-1042');
+  await expect(page.getByRole('button', { name: 'Acknowledge' })).toBeVisible();
+  await page.getByRole('button', { name: 'More actions' }).click();
+  await expect(page.getByRole('menuitem', { name: 'Escalate' })).toBeVisible();
+  await expect(page.getByRole('menuitem')).toHaveCount(1);
+});
+
+test('More actions menu works from the keyboard', async ({ page }) => {
+  await page.goto('/alerts/ALT-1042');
+  const more = page.getByRole('button', { name: 'More actions' });
+  await more.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menu')).toBeVisible();
+  // Opening from the keyboard highlights the first (and only) item, Escalate.
+  await expect(page.getByRole('menuitem', { name: 'Escalate' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(dialog(page)).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog(page)).toHaveCount(0);
+  await expect(more).toBeFocused();
 });
 
 test('a server error is shown in the dialog and the dialog stays open', async ({ page }) => {

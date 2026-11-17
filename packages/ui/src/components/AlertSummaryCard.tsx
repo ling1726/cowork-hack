@@ -1,19 +1,11 @@
 import type { Alert, TimelineEvent, User } from '@app/domain';
-import { Card, Link, Text, makeStyles, tokens } from '@fluentui/react-components';
 import type { ReactNode } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { buttonVariants } from '../primitives/button.tsx';
+import { Card, CardContent, CardFooter } from '../primitives/card.tsx';
 import { AlertHeader } from './AlertHeader.tsx';
 import { AlertHighlights } from './AlertHighlights.tsx';
 import { AlertTimeline } from './AlertTimeline.tsx';
-
-const useStyles = makeStyles({
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacingVerticalM,
-    maxWidth: '720px',
-  },
-  footer: { display: 'flex', justifyContent: 'flex-end' },
-});
 
 export interface AlertSummaryCardProps {
   alert: Alert;
@@ -31,22 +23,31 @@ export function AlertSummaryCard({
   openInAppHref,
   renderLink,
 }: AlertSummaryCardProps) {
-  const styles = useStyles();
   return (
-    <Card className={styles.card} data-testid="alert-summary-card">
-      <AlertHeader alert={alert} actions={[]} onAction={() => {}} />
-      <AlertHighlights highlights={alert.highlights} />
-      <Text weight="semibold">Recent activity</Text>
-      <AlertTimeline events={recentEvents.slice(-3)} users={users} />
-      <div className={styles.footer}>
+    <Card className="max-w-3xl" data-testid="alert-summary-card">
+      <CardContent className="flex flex-col gap-5">
+        <AlertHeader alert={alert} actions={[]} onAction={() => {}} />
+        <AlertHighlights highlights={alert.highlights} />
+        <section className="flex flex-col gap-3">
+          <h2 className="text-sm font-medium text-muted-foreground">Recent activity</h2>
+          <AlertTimeline events={recentEvents.slice(-3)} users={users} />
+        </section>
+      </CardContent>
+      <CardFooter className="justify-end">
         {renderLink ? (
           renderLink(openInAppHref, 'Open in app')
         ) : (
-          <Link href={openInAppHref} target="_blank" rel="noreferrer">
+          <a
+            href={openInAppHref}
+            target="_blank"
+            rel="noreferrer"
+            className={buttonVariants({ variant: 'outline', size: 'sm' })}
+          >
             Open in app
-          </Link>
+            <ExternalLink aria-hidden />
+          </a>
         )}
-      </div>
+      </CardFooter>
     </Card>
   );
 }
