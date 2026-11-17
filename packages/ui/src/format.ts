@@ -5,10 +5,18 @@ const dateTimeSeconds = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'medium',
   timeStyle: 'medium',
 });
+const shortDateTime = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit',
+});
 const number = new Intl.NumberFormat('en-GB');
 const euro = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR' });
 
 export const formatDateTime = (iso: string) => dateTime.format(new Date(iso));
+/** Compact form for dense tables: "17 Nov, 14:10". */
+export const formatShortDateTime = (iso: string) => shortDateTime.format(new Date(iso));
 export const formatDateTimeSeconds = (iso: string) => dateTimeSeconds.format(new Date(iso));
 export const formatNumber = (n: number) => number.format(n);
 export const formatEuro = (n: number) => euro.format(n);

@@ -1,4 +1,5 @@
-import { SearchBox as FluentSearchBox } from '@fluentui/react-components';
+import { Input } from '@app/ui';
+import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export interface SearchBoxProps {
@@ -27,12 +28,19 @@ export function SearchBox({ value, onCommit, delayMs = 300 }: SearchBoxProps) {
   }, [text, value, delayMs, onCommit]);
 
   return (
-    <FluentSearchBox
-      aria-label="Search alerts"
-      placeholder="Search alerts"
-      value={text}
-      onChange={(_e, d) => setText(d.value)}
-      style={{ minWidth: 280 }}
-    />
+    <div className="relative w-full sm:w-64">
+      <Search
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+      />
+      <Input
+        type="search"
+        aria-label="Search alerts"
+        placeholder="Search alerts…"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="pl-8"
+      />
+    </div>
   );
 }

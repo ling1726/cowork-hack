@@ -1,4 +1,5 @@
-import { MessageBar, MessageBarBody, Spinner } from '@fluentui/react-components';
+import { Skeleton } from '@app/ui';
+import { CircleAlert } from 'lucide-react';
 import { useEffect, type ReactNode } from 'react';
 import { useUsers } from '../hooks.ts';
 import { DEFAULT_USER_ID, useUiStore } from '../store/ui-store.ts';
@@ -20,11 +21,23 @@ export function UserGate({ children }: { children: ReactNode }) {
 
   if (isError) {
     return (
-      <MessageBar intent="error">
-        <MessageBarBody>Cannot reach the API: {error.message}</MessageBarBody>
-      </MessageBar>
+      <div
+        role="alert"
+        className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+      >
+        <CircleAlert className="size-4" />
+        Cannot reach the API: {error.message}
+      </div>
     );
   }
-  if (!users || !known) return <Spinner label="Loading…" />;
+  if (!users || !known) {
+    return (
+      <div className="flex flex-col gap-3" aria-busy="true" aria-label="Loading…">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
   return <>{children}</>;
 }

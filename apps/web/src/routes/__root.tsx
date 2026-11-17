@@ -1,36 +1,34 @@
-import { Text, makeStyles, tokens } from '@fluentui/react-components';
+import { buttonVariants, SidebarInset, SidebarProvider } from '@app/ui';
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router';
-import { AppHeader } from '../components/AppHeader.tsx';
+import { AppSidebar } from '../components/shell/AppSidebar.tsx';
+import { TopBar } from '../components/shell/TopBar.tsx';
 import { UserGate } from '../components/UserGate.tsx';
 
-const useStyles = makeStyles({
-  main: { padding: tokens.spacingHorizontalXL, maxWidth: '1400px', margin: '0 auto' },
-  notFound: { display: 'flex', flexDirection: 'column', gap: tokens.spacingVerticalM },
-});
-
 function NotFound() {
-  const styles = useStyles();
   return (
-    <div className={styles.notFound}>
-      <Text as="h1" size={700} weight="semibold">
-        Page not found
-      </Text>
-      <Link to="/alerts">Back to alerts</Link>
+    <div className="flex flex-col items-start gap-3 py-16">
+      <h1 className="text-2xl font-semibold tracking-tight">Page not found</h1>
+      <p className="text-sm text-muted-foreground">There is nothing at this address.</p>
+      <Link to="/alerts" className={buttonVariants({ variant: 'outline' })}>
+        Back to alerts
+      </Link>
     </div>
   );
 }
 
 function RootLayout() {
-  const styles = useStyles();
   return (
-    <>
-      <AppHeader />
-      <main className={styles.main}>
-        <UserGate>
-          <Outlet />
-        </UserGate>
-      </main>
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="min-w-0 text-foreground">
+        <TopBar />
+        <div className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 p-4 md:p-6">
+          <UserGate>
+            <Outlet />
+          </UserGate>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 

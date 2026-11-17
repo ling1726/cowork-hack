@@ -2,8 +2,11 @@ import { alertListUrl } from '@app/domain';
 import { expect, test } from './fixtures.ts';
 
 const BASE = 'http://localhost:5173';
-const rows = (page: import('@playwright/test').Page) =>
-  page.getByRole('row').filter({ hasText: /ALT-/ });
+type Page = import('@playwright/test').Page;
+const rows = (page: Page) => page.getByRole('row').filter({ hasText: /ALT-/ });
+/** Popover filter trigger, named "<Field> filter" plus the chosen values. */
+const filterButton = (page: Page, label: string) =>
+  page.getByRole('button', { name: new RegExp(`^${label} filter`) });
 
 test('W1 deep link renders exactly 2 rows and the filters are set', async ({ page }) => {
   await page.goto(
@@ -17,9 +20,9 @@ test('W1 deep link renders exactly 2 rows and the filters are set', async ({ pag
   await expect(rows(page)).toHaveCount(2);
   await expect(page.getByTestId('result-count')).toHaveText('2 alerts');
   await expect(page.getByRole('searchbox')).toHaveValue('layering');
-  await expect(page.getByRole('combobox', { name: 'Status' })).toContainText('Open');
-  await expect(page.getByRole('combobox', { name: 'Severity' })).toContainText('High');
-  await expect(page.getByRole('combobox', { name: 'Desk' })).toContainText('EU Equities');
+  await expect(filterButton(page, 'Status')).toContainText('Open');
+  await expect(filterButton(page, 'Severity')).toContainText('High');
+  await expect(filterButton(page, 'Desk')).toContainText('EU Equities');
   await expect(page.getByRole('link', { name: 'ALT-1042' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'ALT-1047' })).toBeVisible();
 });
@@ -27,8 +30,8 @@ test('W1 deep link renders exactly 2 rows and the filters are set', async ({ pag
 test('setting filters via the UI produces the canonical URL', async ({ page }) => {
   await page.goto('/alerts');
   const choose = async (label: string, option: string) => {
-    await page.getByRole('combobox', { name: label }).click();
-    await page.getByRole('menuitemcheckbox', { name: option, exact: true }).click();
+    await filterButton(page, label).click();
+    await page.getByRole('checkbox', { name: option, exact: true }).click();
     await page.keyboard.press('Escape');
   };
   await choose('Status', 'Open');
@@ -52,9 +55,9 @@ test('setting filters via the UI produces the canonical URL', async ({ page }) =
 
 test('multi-select values are comma-joined in the URL', async ({ page }) => {
   await page.goto('/alerts');
-  await page.getByRole('combobox', { name: 'Status' }).click();
-  await page.getByRole('menuitemcheckbox', { name: 'Open', exact: true }).click();
-  await page.getByRole('menuitemcheckbox', { name: 'In Progress', exact: true }).click();
+  await filterButton(page, 'Status').click();
+  await page.getByRole('checkbox', { name: 'Open', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'In Progress', exact: true }).click();
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(alertListUrl(BASE, { status: ['open', 'in_progress'] }));
   expect(page.url()).toContain('status=open,in_progress');
@@ -94,8 +97,8 @@ test('pagination moves between pages and filters reset the page', async ({ page 
   await expect(page).toHaveURL(`${BASE}/alerts?page=2`);
   await expect(page.getByTestId('pagination')).toContainText('Page 2 of 3');
   await expect(rows(page)).toHaveCount(25);
-  await page.getByRole('combobox', { name: 'Severity' }).click();
-  await page.getByRole('menuitemcheckbox', { name: 'High', exact: true }).click();
+  await filterButton(page, 'Severity').click();
+  await page.getByRole('checkbox', { name: 'High', exact: true }).click();
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(`${BASE}/alerts?severity=high`);
   await expect(page.getByTestId('pagination')).toContainText('Page 1 of');
@@ -148,4 +151,39 @@ test('whitespace-only and punctuation search never errors', async ({ page }) => 
   await page.goto(`/alerts?q=${encodeURIComponent('"(*')}`);
   await expect(page.getByTestId('result-count')).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
+test('faceted filter works from the keyboard', async ({ page }) => {
+  await page.goto('/alerts');
+  const trigger = filterButton(page, 'Status');
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('prog');
+  await expect(page.getByRole('checkbox')).toHaveCount(1);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('checkbox', { name: 'In Progress' })).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(page).toHaveURL(alertListUrl(BASE, { status: ['in_progress'] }));
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('checkbox')).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
+test('list has no horizontal page scroll at 390px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/alerts');
+  await expect(rows(page).first()).toBeVisible();
+  const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+  expect(fits).toBe(true);
+});
+
+test('shared component styles reach the app', async ({ page }) => {
+  await page.goto('/alerts');
+  const badge = page.getByTestId('severity-badge').first();
+  await expect(badge).toBeVisible();
+  expect(await badge.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(
+    'rgba(0, 0, 0, 0)',
+  );
+  const cell = rows(page).first().locator('td').first();
+  expect(await cell.evaluate((el) => getComputedStyle(el).paddingTop)).not.toBe('0px');
 });

@@ -10,7 +10,8 @@ import {
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import type { MouseEvent, ReactNode } from 'react';
 import { cn } from '../lib/utils.ts';
-import { formatDateTime, nameOf } from '../format.ts';
+import { formatDateTime, formatShortDateTime, nameOf } from '../format.ts';
+import { AvatarGroup } from '../primitives/avatar.tsx';
 import {
   Table,
   TableBody,
@@ -68,7 +69,7 @@ export function AlertTable({
     col.accessor('title', {
       header: 'Title',
       cell: (c) => (
-        <span className="block max-w-[28rem] truncate font-medium" title={c.getValue()}>
+        <span className="block max-w-[22rem] truncate font-medium" title={c.getValue()}>
           {c.getValue()}
         </span>
       ),
@@ -92,11 +93,13 @@ export function AlertTable({
             className="flex items-center gap-2"
             title={`${primary} (primary), ${backup} (backup)`}
           >
-            <span className="flex -space-x-1.5">
+            <AvatarGroup className="-space-x-1">
               <UserAvatar name={primary} />
               <UserAvatar name={backup} />
+            </AvatarGroup>
+            <span className="sr-only">
+              {primary} (primary), {backup} (backup)
             </span>
-            <span className="truncate text-muted-foreground">{primary}</span>
           </span>
         );
       },
@@ -112,16 +115,22 @@ export function AlertTable({
     col.accessor('createdAt', {
       header: 'Created',
       cell: (c) => (
-        <span className="whitespace-nowrap text-muted-foreground">
-          {formatDateTime(c.getValue())}
+        <span
+          className="whitespace-nowrap text-muted-foreground"
+          title={formatDateTime(c.getValue())}
+        >
+          {formatShortDateTime(c.getValue())}
         </span>
       ),
     }),
     col.accessor('updatedAt', {
       header: 'Updated',
       cell: (c) => (
-        <span className="whitespace-nowrap text-muted-foreground">
-          {formatDateTime(c.getValue())}
+        <span
+          className="whitespace-nowrap text-muted-foreground"
+          title={formatDateTime(c.getValue())}
+        >
+          {formatShortDateTime(c.getValue())}
         </span>
       ),
     }),
