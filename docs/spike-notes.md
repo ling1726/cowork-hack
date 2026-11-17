@@ -32,4 +32,4 @@ Record the answers here:
 - (c) Did Cowork ask for confirmation before calling `add_comment` (a tool that is not read-only)? ______
 - (d) Was a link in a reply clickable? ______
 
-If (a) is no, the options are a tunnel (`cloudflared tunnel --url http://localhost:3002`, then put the tunnel URL in `plugin/.mcp.json`) or another route. No code changes are needed either way: the links Claude hands out come from `APP_BASE_URL`, which must stay a URL the analyst's browser can open.
+If (a) is no, the options are a tunnel (`cloudflared tunnel --url http://localhost:3002`, then put the tunnel URL in `plugin/.mcp.json` and start the MCP server with `ALLOWED_HOSTS=<the tunnel's hostname>`, because it only answers requests addressed to localhost, 127.0.0.1 or [::1] by default) or another route. No code changes are needed either way: the links Claude hands out come from `APP_BASE_URL`, which must stay a URL the analyst's browser can open.

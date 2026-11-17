@@ -3,6 +3,7 @@ import { actionRequestUrl, alertListUrl, alertUrl } from '@app/domain';
 import { serve } from '@hono/node-server';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { request } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AGENT_TOKEN, asUser, makeApp } from '../../server/test/helpers.ts';
@@ -337,5 +338,97 @@ describe('write tools', () => {
     expect(r.structuredContent.url).toBe(alertUrl(APP, 'ALT-1042', { tab: 'timeline' }));
     expect(text(r)).toContain('added');
     expect(text(r)).not.toContain('Nothing has changed yet');
+  });
+});
+
+describe('host and origin protection (DNS rebinding)', () => {
+  const mcpUrl = () => (client.transport as unknown as { _url: URL })._url;
+  const raw = (headers: Record<string, string>) =>
+    new Promise<{ status: number; body: string }>((resolve, reject) => {
+      const u = mcpUrl();
+      const req = request(
+        { host: u.hostname, port: u.port, path: '/health', method: 'GET', headers },
+        (res) => {
+          let body = '';
+          res.on('data', (c) => (body += c));
+          res.on('end', () => resolve({ status: res.statusCode ?? 0, body }));
+        },
+      );
+      req.on('error', reject);
+      req.end();
+    });
+
+  it('serves requests addressed to loopback names', async () => {
+    expect((await raw({})).status).toBe(200);
+    expect((await raw({ Host: 'localhost:3002' })).status).toBe(200);
+    expect((await raw({ Host: '127.0.0.1' })).status).toBe(200);
+    expect((await raw({ Host: '[::1]:3002' })).status).toBe(200);
+  });
+
+  it('rejects a foreign Host header (a rebound DNS name)', async () => {
+    const r = await raw({ Host: 'evil.example:3002' });
+    expect(r.status).toBe(403);
+    expect(r.body).toContain('host');
+  });
+
+  it('rejects a browser Origin that is not a local page', async () => {
+    expect((await raw({ Origin: 'https://evil.example' })).status).toBe(403);
+    expect((await raw({ Origin: 'http://localhost:5173' })).status).toBe(200);
+    expect((await raw({ Origin: 'null' })).status).toBe(403);
+  });
+
+  it('applies to the MCP endpoint too', async () => {
+    const u = mcpUrl();
+    const res = await new Promise<number>((resolve, reject) => {
+      const req = request(
+        {
+          host: u.hostname,
+          port: u.port,
+          path: '/mcp',
+          method: 'POST',
+          headers: {
+            Host: 'evil.example',
+            'Content-Type': 'application/json',
+            Accept: 'application/json, text/event-stream',
+          },
+        },
+        (r) => resolve(r.statusCode ?? 0),
+      );
+      req.on('error', reject);
+      req.end(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }));
+    });
+    expect(res).toBe(403);
+  });
+
+  it('extra hosts can be allowed (for a tunnel)', async () => {
+    const api = createApiClient({
+      baseUrl: backendUrl,
+      getUserId: () => 'U-01',
+      agentToken: AGENT_TOKEN,
+    });
+    const tunnel = await startHttp({
+      port: 0,
+      deps: { api, appBaseUrl: APP, actingUserId: 'U-01' },
+      allowedHosts: ['demo.tunnel.example'],
+    });
+    try {
+      const u = new URL(tunnel.url);
+      const status = await new Promise<number>((resolve, reject) => {
+        const req = request(
+          {
+            host: u.hostname,
+            port: u.port,
+            path: '/health',
+            headers: { Host: 'demo.tunnel.example' },
+          },
+          (r) => resolve(r.statusCode ?? 0),
+        );
+        req.on('error', reject);
+        req.end();
+      });
+      expect(status).toBe(200);
+    } finally {
+      await tunnel.close();
+    }
   });
 });

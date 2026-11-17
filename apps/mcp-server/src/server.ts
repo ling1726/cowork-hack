@@ -7,6 +7,15 @@ import { registerTools, type McpDeps } from './tools.ts';
 
 export type { McpDeps };
 
+const LOOPBACK_HOSTS = ['localhost', '127.0.0.1', '[::1]'];
+
+/** `host:port` or `[::1]:port` to the lower-case host name without the port. */
+function hostnameOf(hostHeader: string): string {
+  const h = hostHeader.trim().toLowerCase();
+  if (h.startsWith('[')) return h.slice(0, h.indexOf(']') + 1);
+  return h.split(':')[0] ?? '';
+}
+
 export function createMcpServer(deps: McpDeps): McpServer {
   const server = new McpServer({ name: 'alerts', version: '0.1.0' });
   registerTools(server, deps);
@@ -28,8 +37,32 @@ export async function startHttp(opts: {
   port: number;
   host?: string;
   deps: McpDeps;
+  /** Host names accepted besides loopback (for example a tunnel hostname). */
+  allowedHosts?: string[];
 }): Promise<RunningServer> {
+  const allowed = new Set([
+    ...LOOPBACK_HOSTS,
+    ...(opts.allowedHosts ?? []).map((h) => h.toLowerCase()),
+  ]);
   const app = new Hono();
+  // DNS-rebinding protection: a web page can point its own domain at 127.0.0.1 and talk to this
+  // server. Such requests carry the page's domain in Host (and a browser Origin), so only
+  // loopback names, plus any explicitly allowed host, are served.
+  app.use('*', async (c, next) => {
+    const host = c.req.header('Host');
+    if (!host || !allowed.has(hostnameOf(host))) return c.json({ error: 'forbidden host' }, 403);
+    const origin = c.req.header('Origin');
+    if (origin !== undefined) {
+      let originHost = '';
+      try {
+        originHost = hostnameOf(new URL(origin).host);
+      } catch {
+        // "null" and other opaque origins are not local pages
+      }
+      if (!allowed.has(originHost)) return c.json({ error: 'forbidden origin' }, 403);
+    }
+    await next();
+  });
   app.get('/health', (c) => c.json({ ok: true }));
   app.all('/mcp', async (c) => {
     const server = createMcpServer(opts.deps);

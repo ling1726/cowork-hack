@@ -14,6 +14,7 @@ const api = createApiClient({
 const server = await startHttp({
   port: env.port,
   host: env.host,
+  allowedHosts: env.allowedHosts,
   deps: { api, appBaseUrl: env.appBaseUrl, actingUserId: env.actingUserId },
 });
 console.log(

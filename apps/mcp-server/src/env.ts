@@ -5,6 +5,8 @@ export interface McpEnv {
   appBaseUrl: string;
   actingUserId: string;
   agentToken: string;
+  /** Extra Host names to accept besides loopback, e.g. a tunnel's hostname. */
+  allowedHosts: string[];
 }
 
 function port(raw: string | undefined): number {
@@ -29,5 +31,9 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     appBaseUrl: trimSlash(source.APP_BASE_URL || 'http://localhost:5173'),
     actingUserId: source.ACTING_USER_ID || 'U-01',
     agentToken,
+    allowedHosts: (source.ALLOWED_HOSTS ?? '')
+      .split(',')
+      .map((h) => h.trim())
+      .filter(Boolean),
   };
 }
