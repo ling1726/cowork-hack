@@ -1,5 +1,6 @@
 import { ActionRequestCard } from '@app/ui';
 import { CircleAlert } from 'lucide-react';
+import { useUsers } from '../hooks.ts';
 import { useActionRequestOwner } from '../hooks/useRequestOwner.ts';
 import { useDecide, type ActionRequestDetail } from '../hooks/useActionRequests.ts';
 import { AlertLink } from './AlertLink.tsx';
@@ -8,6 +9,10 @@ import { AlertLink } from './AlertLink.tsx';
 export function RequestCard({ detail }: { detail: ActionRequestDetail }) {
   const { approve, reject } = useDecide(detail.id);
   const { canDecide, ownerName } = useActionRequestOwner(detail.onBehalfOf);
+  const { data: users = [] } = useUsers();
+  const decidedByName = detail.decidedBy
+    ? (users.find((u) => u.id === detail.decidedBy)?.name ?? detail.decidedBy)
+    : undefined;
   const error = approve.error ?? reject.error;
   const decidable = detail.status === 'pending' && canDecide;
   return (
@@ -22,6 +27,7 @@ export function RequestCard({ detail }: { detail: ActionRequestDetail }) {
         request={detail}
         alert={detail.alert}
         busy={approve.isPending || reject.isPending}
+        {...(decidedByName ? { decidedByName } : {})}
         {...(decidable
           ? {
               onApprove: () => approve.mutate(),

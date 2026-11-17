@@ -16,7 +16,7 @@ export default defineConfig({
     {
       command: 'pnpm --filter @app/server start',
       url: `${API}/api/users`,
-      env: { AGENT_TOKEN: 'test-agent-token', PORT: '3001' },
+      env: { AGENT_TOKEN: 'test-agent-token', COWORK_TOKEN: 'test-cowork-token', PORT: '3001' },
       reuseExistingServer: false,
       timeout: 60_000,
     },

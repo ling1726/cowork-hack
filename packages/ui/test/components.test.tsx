@@ -306,6 +306,32 @@ describe('@app/ui', () => {
     expect(within(items[0] as HTMLElement).getByText(/System/)).toBeInTheDocument();
   });
 
+  it('AlertTimeline names Cowork on approvals and rejections decided there', () => {
+    const base = { alertId: 'ALT-1042', at: '2026-11-17T09:00:00.000Z', actorId: 'U-01' };
+    const events: TimelineEvent[] = [
+      {
+        ...base,
+        id: 'EV-1',
+        type: 'comment',
+        body: 'x',
+        via: 'claude',
+        approvedBy: 'U-01',
+        decidedIn: 'cowork',
+      },
+      {
+        ...base,
+        id: 'EV-2',
+        type: 'action_rejected',
+        requestId: 'AR-0002',
+        via: 'app',
+        decidedIn: 'cowork',
+      },
+    ];
+    renderUi(<AlertTimeline events={events} users={users} />);
+    expect(screen.getByTestId('via-claude')).toHaveTextContent('approved by Priya Shah in Cowork');
+    expect(screen.getByText('Rejected request AR-0002 in Cowork')).toBeInTheDocument();
+  });
+
   it('AlertTimeline links requested actions through renderLink', () => {
     const renderLink = vi.fn((href: string, label: string) => <a href={href}>{label}</a>);
     renderUi(<AlertTimeline events={events} users={users} renderLink={renderLink} />);
@@ -552,6 +578,79 @@ describe('@app/ui', () => {
       </>,
     );
     expect(screen.getByText(/Not now\./)).toBeInTheDocument();
+  });
+
+  it('ActionRequestCard shows who decided and where', () => {
+    renderUi(
+      <ActionRequestCard
+        request={{
+          ...pending,
+          status: 'approved',
+          decidedBy: 'U-01',
+          decidedIn: 'cowork',
+          decidedAt: '2026-11-17T09:05:00.000Z',
+        }}
+        alert={summary}
+        decidedByName="Priya Shah"
+        renderAlertLink={(id, label) => <span>{`${id} ${label}`}</span>}
+      />,
+    );
+    expect(screen.getByTestId('decision')).toHaveTextContent('Approved by Priya Shah in Cowork');
+  });
+
+  it('ActionRequestCard says "in the app" for decisions without decidedIn', () => {
+    renderUi(
+      <ActionRequestCard
+        request={{ ...pending, status: 'rejected', decidedBy: 'U-01' }}
+        alert={summary}
+        decidedByName="Priya Shah"
+        renderAlertLink={(id, label) => <span>{`${id} ${label}`}</span>}
+      />,
+    );
+    expect(screen.getByTestId('decision')).toHaveTextContent('Rejected by Priya Shah in the app');
+  });
+
+  it('ActionRequestCard renders its link slot', () => {
+    renderUi(
+      <ActionRequestCard
+        request={pending}
+        alert={summary}
+        link={{ href: 'http://x/queue/AR-0001', label: 'Review in app' }}
+        renderAlertLink={(id, label) => <span>{`${id} ${label}`}</span>}
+      />,
+    );
+    expect(screen.getByRole('link', { name: /Review in app/ })).toHaveAttribute(
+      'href',
+      'http://x/queue/AR-0001',
+    );
+  });
+
+  it('ViaClaudeTag names Cowork when the approval happened there', () => {
+    renderUi(<ViaClaudeTag approvedByName="Priya Shah" decidedIn="cowork" />);
+    expect(screen.getByTestId('via-claude')).toHaveTextContent(
+      'via Claude · approved by Priya Shah in Cowork',
+    );
+  });
+
+  it('AlertTable renders a row action that does not trigger the row click', async () => {
+    const onRowClick = vi.fn();
+    const onInvestigate = vi.fn();
+    renderUi(
+      <AlertTable
+        items={[summary]}
+        onRowClick={onRowClick}
+        renderAlertLink={(id, label) => <span>{`${id} ${label}`}</span>}
+        renderRowAction={(a) => (
+          <button type="button" onClick={() => onInvestigate(a.id)}>
+            Investigate
+          </button>
+        )}
+      />,
+    );
+    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Investigate' }));
+    expect(onInvestigate).toHaveBeenCalledWith('ALT-1042');
+    expect(onRowClick).not.toHaveBeenCalled();
   });
 
   it('ActionRequestCard previews an acknowledge request', () => {

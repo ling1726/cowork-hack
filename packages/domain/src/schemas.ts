@@ -3,6 +3,7 @@ import {
   ActionRequestStatus,
   AlertStatus,
   Category,
+  DecisionSurface,
   Desk,
   ResolutionOutcome,
   Severity,
@@ -155,6 +156,8 @@ const eventBase = z.object({
   via: Via,
   actionRequestId: z.string().optional(),
   approvedBy: z.string().optional(),
+  /** Set on the event an approved request produced, and on action_rejected. */
+  decidedIn: DecisionSurface.optional(),
 });
 
 export const TimelineEventSchema = z.discriminatedUnion('type', [
@@ -197,6 +200,7 @@ const actionRequestBase = z.object({
   createdAt: iso,
   decidedAt: iso.optional(),
   decidedBy: z.string().optional(),
+  decidedIn: DecisionSurface.optional(),
   rejectReason: z.string().optional(),
   failure: z.object({ code: z.string(), message: z.string() }).optional(),
   resultEventId: z.string().optional(),

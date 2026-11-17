@@ -36,6 +36,8 @@ export interface AlertTableProps {
   onRowClick?: (id: string) => void;
   /** Resolves assignee names; ids are shown when missing. */
   users?: User[];
+  /** A trailing per-row control (for example Investigate in Cowork). Row clicks ignore buttons. */
+  renderRowAction?: (alert: AlertSummary) => ReactNode;
 }
 
 function parseSort(sort: AlertSort | undefined): SortingState {
@@ -53,6 +55,7 @@ export function AlertTable({
   renderAlertLink,
   onRowClick,
   users = [],
+  renderRowAction,
 }: AlertTableProps) {
   const sorting = parseSort(sort);
   const current = sorting[0];
@@ -134,6 +137,17 @@ export function AlertTable({
         </span>
       ),
     }),
+    ...(renderRowAction
+      ? [
+          col.display({
+            id: 'actions',
+            header: 'Actions',
+            cell: (c) => (
+              <span className="flex justify-end">{renderRowAction(c.row.original)}</span>
+            ),
+          }),
+        ]
+      : []),
   ]);
 
   // Sorting and paging happen on the server: the table renders what it is given.
@@ -165,6 +179,13 @@ export function AlertTable({
             {group.headers.map((header) => {
               const field = header.column.id;
               const label = String(header.column.columnDef.header);
+              if (field === 'actions') {
+                return (
+                  <TableHead key={header.id}>
+                    <span className="sr-only">{label}</span>
+                  </TableHead>
+                );
+              }
               if (!SORT_FIELDS.includes(field)) {
                 return (
                   <TableHead key={header.id} className="text-xs font-medium text-muted-foreground">

@@ -277,6 +277,8 @@ Tool descriptions stay short. The investigation method lives in the skill. Write
 
 ## 12. Phase 2 — MCP Apps (follow-up, sketched here)
 
+Superseded by `2026-11-17-mcp-apps-phase2-design.md`, which moves approval onto the Cowork request card.
+
 - `apps/mcp-ui` builds one self-contained HTML file per view (`alert-card.html`, `alert-list.html`) with Vite + `vite-plugin-singlefile`, importing `@app/ui` and the MCP Apps client SDK (`@modelcontextprotocol/ext-apps`).
 - The MCP server registers them as `ui://alerts/alert-card` and `ui://alerts/alert-list` resources. `get_alert` and `search_alerts` declare the UI resource in their tool metadata.
 - In the iframe, data arrives through the tool result (`structuredContent`). Actions call server tools through the bridge, and "Open in app" uses the host's open-link capability with the same deep link. No direct network access from the iframe.

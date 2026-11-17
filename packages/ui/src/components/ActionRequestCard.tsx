@@ -1,15 +1,16 @@
 import {
   ACTION_REQUEST_KIND_LABELS,
+  DECISION_SURFACE_LABELS,
   ACTION_REQUEST_STATUS_LABELS,
   type ActionRequest,
   type ActionRequestStatus,
   type AlertSummary,
 } from '@app/domain';
-import { Bot } from 'lucide-react';
+import { Bot, ExternalLink } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { formatDateTime } from '../format.ts';
 import { Badge } from '../primitives/badge.tsx';
-import { Button } from '../primitives/button.tsx';
+import { Button, buttonVariants } from '../primitives/button.tsx';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../primitives/card.tsx';
 import { Input } from '../primitives/input.tsx';
 
@@ -40,6 +41,12 @@ export interface ActionRequestCardProps {
   onReject?: (reason?: string) => void;
   busy?: boolean;
   renderAlertLink: (id: string, label: string) => ReactNode;
+  /** Who decided, shown with where: "Approved by Priya Shah in Cowork". */
+  decidedByName?: string;
+  /** An "Open in app" / "Review in app" link in the footer. */
+  link?: { href: string; label: 'Open in app' | 'Review in app' };
+  /** Renders `link` (for example through a host bridge); a new-tab anchor by default. */
+  renderLink?: (href: string, label: string) => ReactNode;
 }
 
 export function ActionRequestCard({
@@ -49,6 +56,9 @@ export function ActionRequestCard({
   onReject,
   busy,
   renderAlertLink,
+  decidedByName,
+  link,
+  renderLink,
 }: ActionRequestCardProps) {
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
@@ -95,6 +105,12 @@ export function ActionRequestCard({
           <Label>Moves the alert to In Progress.</Label>
         )}
 
+        {!pending && decidedByName && (
+          <p className="text-sm text-muted-foreground" data-testid="decision">
+            {request.status === 'rejected' ? 'Rejected' : 'Approved'} by {decidedByName}{' '}
+            {DECISION_SURFACE_LABELS[request.decidedIn ?? 'app']}
+          </p>
+        )}
         {request.status === 'failed' && request.failure && (
           <p
             className="rounded-md bg-orange-500/10 px-3 py-2 text-sm text-orange-800 dark:text-orange-300"
@@ -110,19 +126,19 @@ export function ActionRequestCard({
         )}
       </CardContent>
 
-      {pending && (onApprove || onReject) && (
+      {((pending && (onApprove || onReject)) || link) && (
         <CardFooter className="flex flex-wrap items-center gap-2">
-          {onApprove && (
+          {pending && onApprove && (
             <Button disabled={busy} onClick={onApprove}>
               Approve
             </Button>
           )}
-          {onReject && !rejecting && (
+          {pending && onReject && !rejecting && (
             <Button variant="outline" disabled={busy} onClick={() => setRejecting(true)}>
               Reject
             </Button>
           )}
-          {onReject && rejecting && (
+          {pending && onReject && rejecting && (
             <>
               <Input
                 aria-label="Rejection reason"
@@ -146,6 +162,23 @@ export function ActionRequestCard({
                 Cancel
               </Button>
             </>
+          )}
+          {link && (
+            <span className="ml-auto">
+              {renderLink ? (
+                renderLink(link.href, link.label)
+              ) : (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                >
+                  {link.label}
+                  <ExternalLink aria-hidden />
+                </a>
+              )}
+            </span>
           )}
         </CardFooter>
       )}

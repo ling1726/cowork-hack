@@ -422,6 +422,8 @@ export interface paths {
                             actionRequestId?: string;
                             approvedBy?: string;
                             /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
+                            /** @enum {string} */
                             type: "created";
                         } | {
                             id: string;
@@ -433,6 +435,8 @@ export interface paths {
                             via: "app" | "claude";
                             actionRequestId?: string;
                             approvedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             /** @enum {string} */
                             type: "comment";
                             body: string;
@@ -446,6 +450,8 @@ export interface paths {
                             via: "app" | "claude";
                             actionRequestId?: string;
                             approvedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             /** @enum {string} */
                             type: "status_changed";
                             /** @enum {string} */
@@ -464,6 +470,8 @@ export interface paths {
                             actionRequestId?: string;
                             approvedBy?: string;
                             /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
+                            /** @enum {string} */
                             type: "escalated";
                             toUserId: string;
                             reason: string;
@@ -477,6 +485,8 @@ export interface paths {
                             via: "app" | "claude";
                             actionRequestId?: string;
                             approvedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             /** @enum {string} */
                             type: "assignees_changed";
                             primaryId: string;
@@ -492,6 +502,8 @@ export interface paths {
                             actionRequestId?: string;
                             approvedBy?: string;
                             /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
+                            /** @enum {string} */
                             type: "link_added";
                             linkId: string;
                         } | {
@@ -505,6 +517,8 @@ export interface paths {
                             actionRequestId?: string;
                             approvedBy?: string;
                             /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
+                            /** @enum {string} */
                             type: "attachment_added";
                             attachmentId: string;
                         } | {
@@ -517,6 +531,8 @@ export interface paths {
                             via: "app" | "claude";
                             actionRequestId?: string;
                             approvedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             /** @enum {string} */
                             type: "action_requested";
                             requestId: string;
@@ -532,6 +548,8 @@ export interface paths {
                             via: "app" | "claude";
                             actionRequestId?: string;
                             approvedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             /** @enum {string} */
                             type: "action_rejected";
                             requestId: string;
@@ -821,6 +839,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -832,6 +852,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -845,6 +867,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -863,6 +887,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -876,6 +902,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -891,6 +919,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -904,6 +934,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -916,6 +948,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -931,6 +965,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -960,6 +996,8 @@ export interface paths {
                                 /** Format: date-time */
                                 decidedAt?: string;
                                 decidedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 rejectReason?: string;
                                 failure?: {
                                     code: string;
@@ -985,6 +1023,8 @@ export interface paths {
                                 /** Format: date-time */
                                 decidedAt?: string;
                                 decidedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 rejectReason?: string;
                                 failure?: {
                                     code: string;
@@ -1203,6 +1243,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -1214,6 +1256,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -1227,6 +1271,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -1245,6 +1291,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -1258,6 +1306,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -1273,6 +1323,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -1286,6 +1338,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -1298,6 +1352,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -1313,6 +1369,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -1342,6 +1400,8 @@ export interface paths {
                                 /** Format: date-time */
                                 decidedAt?: string;
                                 decidedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 rejectReason?: string;
                                 failure?: {
                                     code: string;
@@ -1367,6 +1427,8 @@ export interface paths {
                                 /** Format: date-time */
                                 decidedAt?: string;
                                 decidedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 rejectReason?: string;
                                 failure?: {
                                     code: string;
@@ -1587,6 +1649,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -1598,6 +1662,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -1611,6 +1677,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -1629,6 +1697,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -1642,6 +1712,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -1657,6 +1729,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -1670,6 +1744,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -1682,6 +1758,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -1697,6 +1775,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -1910,6 +1990,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -1921,6 +2003,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -1934,6 +2018,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -1952,6 +2038,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -1965,6 +2053,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -1980,6 +2070,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -1993,6 +2085,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -2005,6 +2099,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -2020,6 +2116,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -2234,6 +2332,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -2245,6 +2345,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -2258,6 +2360,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -2276,6 +2380,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -2289,6 +2395,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -2304,6 +2412,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -2317,6 +2427,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -2329,6 +2441,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -2344,6 +2458,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -2557,6 +2673,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -2568,6 +2686,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -2581,6 +2701,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -2599,6 +2721,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -2612,6 +2736,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -2627,6 +2753,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -2640,6 +2768,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -2652,6 +2782,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -2667,6 +2799,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -2883,6 +3017,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -2894,6 +3030,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -2907,6 +3045,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -2925,6 +3065,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -2938,6 +3080,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -2953,6 +3097,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -2966,6 +3112,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -2978,6 +3126,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -2993,6 +3143,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -3207,6 +3359,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -3218,6 +3372,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -3231,6 +3387,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -3249,6 +3407,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -3262,6 +3422,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -3277,6 +3439,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -3290,6 +3454,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -3302,6 +3468,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -3317,6 +3485,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -3486,6 +3656,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3511,6 +3683,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3586,6 +3760,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3611,6 +3787,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3672,6 +3850,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -3683,6 +3863,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -3696,6 +3878,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -3714,6 +3898,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -3727,6 +3913,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -3742,6 +3930,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -3755,6 +3945,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -3767,6 +3959,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -3782,6 +3976,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -3856,6 +4052,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3881,6 +4079,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -3942,6 +4142,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -3953,6 +4155,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -3966,6 +4170,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -3984,6 +4190,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -3997,6 +4205,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -4012,6 +4222,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -4025,6 +4237,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -4037,6 +4251,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -4052,6 +4268,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;
@@ -4175,6 +4393,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -4200,6 +4420,8 @@ export interface paths {
                             /** Format: date-time */
                             decidedAt?: string;
                             decidedBy?: string;
+                            /** @enum {string} */
+                            decidedIn?: "app" | "cowork";
                             rejectReason?: string;
                             failure?: {
                                 code: string;
@@ -4261,6 +4483,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "created";
                             } | {
                                 id: string;
@@ -4272,6 +4496,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "comment";
                                 body: string;
@@ -4285,6 +4511,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "status_changed";
                                 /** @enum {string} */
@@ -4303,6 +4531,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "escalated";
                                 toUserId: string;
                                 reason: string;
@@ -4316,6 +4546,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "assignees_changed";
                                 primaryId: string;
@@ -4331,6 +4563,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "link_added";
                                 linkId: string;
                             } | {
@@ -4344,6 +4578,8 @@ export interface paths {
                                 actionRequestId?: string;
                                 approvedBy?: string;
                                 /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
+                                /** @enum {string} */
                                 type: "attachment_added";
                                 attachmentId: string;
                             } | {
@@ -4356,6 +4592,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_requested";
                                 requestId: string;
@@ -4371,6 +4609,8 @@ export interface paths {
                                 via: "app" | "claude";
                                 actionRequestId?: string;
                                 approvedBy?: string;
+                                /** @enum {string} */
+                                decidedIn?: "app" | "cowork";
                                 /** @enum {string} */
                                 type: "action_rejected";
                                 requestId: string;

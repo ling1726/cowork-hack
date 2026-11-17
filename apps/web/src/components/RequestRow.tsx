@@ -1,4 +1,4 @@
-import { ACTION_REQUEST_KIND_LABELS } from '@app/domain';
+import { ACTION_REQUEST_KIND_LABELS, DECISION_SURFACE_LABELS } from '@app/domain';
 import {
   Button,
   buttonVariants,
@@ -65,7 +65,14 @@ export function RequestRow({ detail }: { detail: ActionRequestDetail }) {
         {formatShortDateTime(detail.createdAt)}
       </TableCell>
       <TableCell className="align-top">
-        <RequestStatusBadge status={detail.status} />
+        <span className="flex items-center gap-1.5 whitespace-nowrap">
+          <RequestStatusBadge status={detail.status} />
+          {detail.decidedIn === 'cowork' && (
+            <span className="text-xs text-muted-foreground" data-testid="decided-in">
+              {DECISION_SURFACE_LABELS.cowork}
+            </span>
+          )}
+        </span>
       </TableCell>
       <TableCell className="align-top">
         <div className="flex justify-end gap-1.5">

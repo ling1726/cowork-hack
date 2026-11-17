@@ -1,11 +1,26 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/domain" },
-    { "path": "apps/server" },
-    { "path": "packages/api-client" },
-    { "path": "packages/ui" },
-    { "path": "apps/web" },
-    { "path": "apps/mcp-server" }
+    {
+      "path": "packages/domain"
+    },
+    {
+      "path": "apps/server"
+    },
+    {
+      "path": "packages/api-client"
+    },
+    {
+      "path": "packages/ui"
+    },
+    {
+      "path": "apps/web"
+    },
+    {
+      "path": "apps/mcp-server"
+    },
+    {
+      "path": "apps/mcp-ui"
+    }
   ]
 }

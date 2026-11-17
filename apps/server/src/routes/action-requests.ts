@@ -103,13 +103,18 @@ export function registerActionRequests(app: OpenAPIHono<Env>): void {
   app.openapi(approveRoute, (c) => {
     forbidAgent(c);
     const caller = requireUser(c);
-    return c.json(approveRequest(c.get('store'), c.req.valid('param').id, caller), 200);
+    const { surface } = c.get('ctx');
+    return c.json(approveRequest(c.get('store'), c.req.valid('param').id, caller, surface), 200);
   });
 
   app.openapi(rejectRoute, (c) => {
     forbidAgent(c);
     const caller = requireUser(c);
     const reason = c.req.valid('json')?.reason;
-    return c.json(rejectRequest(c.get('store'), c.req.valid('param').id, caller, reason), 200);
+    const { surface } = c.get('ctx');
+    return c.json(
+      rejectRequest(c.get('store'), c.req.valid('param').id, caller, surface, reason),
+      200,
+    );
   });
 }

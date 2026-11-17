@@ -1,6 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
-import { contextMiddleware, type Env } from './context.ts';
+import { contextMiddleware, coworkScope, type Env } from './context.ts';
 import { ApiError, errorBody } from './errors.ts';
 import { registerActionRequests } from './routes/action-requests.ts';
 import { registerAdmin } from './routes/admin.ts';
@@ -15,6 +15,7 @@ import type { Store } from './store/store.ts';
 export interface AppOptions {
   store: Store;
   agentToken: string;
+  coworkToken?: string;
   now?: () => Date;
   seed?: number;
 }
@@ -32,7 +33,8 @@ export function createApp(opts: AppOptions): OpenAPIHono<Env> {
     },
   });
 
-  app.use('/api/*', contextMiddleware(opts.store, opts.agentToken));
+  app.use('/api/*', contextMiddleware(opts.store, opts.agentToken, opts.coworkToken));
+  app.use('/api/*', coworkScope());
 
   app.onError((err, c) => {
     if (err instanceof ApiError) {

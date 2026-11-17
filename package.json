@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n server,web,mcp \"pnpm --filter @app/server dev\" \"pnpm --filter @app/web dev\" \"pnpm --filter @app/mcp-server dev\"",
+    "dev": "pnpm build:ui && concurrently -n server,web,mcp \"pnpm --filter @app/server dev\" \"pnpm --filter @app/web dev\" \"pnpm --filter @app/mcp-server dev\"",
+    "build:ui": "pnpm --filter @app/mcp-ui build",
     "test": "vitest run",
     "typecheck": "tsc -b",
     "lint": "oxlint && oxfmt --check",
     "format": "oxfmt",
-    "e2e": "pnpm --filter @app/web e2e"
+    "e2e": "pnpm --filter @app/web e2e && pnpm --filter @app/mcp-ui e2e"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
