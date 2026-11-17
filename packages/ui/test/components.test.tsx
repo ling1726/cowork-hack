@@ -1,5 +1,4 @@
 import type { ActionRequest, Alert, AlertSummary, DataTab, TimelineEvent, User } from '@app/domain';
-import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -22,8 +21,7 @@ import {
   primaryAction,
 } from '../src/index.ts';
 
-const renderUi = (ui: ReactElement) =>
-  render(<FluentProvider theme={webLightTheme}>{ui}</FluentProvider>);
+const renderUi = (ui: ReactElement) => render(ui);
 
 const users: User[] = [
   { id: 'U-01', name: 'Priya Shah', role: 'analyst', desk: 'eu-equities', initials: 'PS' },
@@ -179,9 +177,9 @@ describe('@app/ui', () => {
     const { rerender } = renderUi(<ViaClaudeTag />);
     expect(screen.getByText('via Claude')).toBeInTheDocument();
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ViaClaudeTag approvedByName="Priya Shah" />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.getByText('via Claude · approved by Priya Shah')).toBeInTheDocument();
   });
@@ -379,16 +377,65 @@ describe('@app/ui', () => {
     );
     // Going from a sorted state to none (a text search switches to relevance) must not crash.
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <AlertTable
           items={[summary]}
           onSortChange={onSortChange}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     await userEvent.click(screen.getByText('Severity'));
     expect(onSortChange).toHaveBeenCalledWith('-severity');
+  });
+
+  it('AlertTable has Created and Updated sort headers', async () => {
+    const onSortChange = vi.fn();
+    const { rerender } = renderUi(
+      <AlertTable
+        items={[summary]}
+        onSortChange={onSortChange}
+        renderAlertLink={(id) => <span>{id}</span>}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Created' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('-createdAt');
+    rerender(
+      <AlertTable
+        items={[summary]}
+        sort="-createdAt"
+        onSortChange={onSortChange}
+        renderAlertLink={(id) => <span>{id}</span>}
+      />,
+    );
+    expect(screen.getByRole('columnheader', { name: /Created/ })).toHaveAttribute(
+      'aria-sort',
+      'descending',
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Created' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('createdAt');
+    await userEvent.click(screen.getByRole('button', { name: 'Updated' }));
+    expect(onSortChange).toHaveBeenLastCalledWith('-updatedAt');
+  });
+
+  it('AlertTable rows call onRowClick, and the ID link does not double-fire', async () => {
+    const onRowClick = vi.fn();
+    renderUi(
+      <AlertTable
+        items={[summary]}
+        onRowClick={onRowClick}
+        renderAlertLink={(id, label) => (
+          <a href={`#${id}`} onClick={(e) => e.preventDefault()}>
+            {label}
+          </a>
+        )}
+      />,
+    );
+    await userEvent.click(screen.getByText('Possible layering in SAP GY by T-0412'));
+    expect(onRowClick).toHaveBeenCalledWith('ALT-1042');
+    onRowClick.mockClear();
+    await userEvent.click(screen.getByRole('link', { name: 'ALT-1042' }));
+    expect(onRowClick).not.toHaveBeenCalled();
   });
 
   it('DataTabTable formats cells by column type', () => {
@@ -464,7 +511,7 @@ describe('@app/ui', () => {
     expect(screen.getByRole('button', { name: 'Approve' })).toBeDisabled();
     const decided: ActionRequest = { ...pending, status: 'approved', decidedBy: 'U-01' };
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ActionRequestCard
           request={decided}
           alert={summary}
@@ -472,7 +519,7 @@ describe('@app/ui', () => {
           onReject={() => {}}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.queryByRole('button', { name: 'Approve' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull();
@@ -496,13 +543,13 @@ describe('@app/ui', () => {
     );
     expect(screen.getByText(/Cannot acknowledge an alert that is in_progress/)).toBeInTheDocument();
     rerender(
-      <FluentProvider theme={webLightTheme}>
+      <>
         <ActionRequestCard
           request={{ ...pending, status: 'rejected', rejectReason: 'Not now.' }}
           alert={summary}
           renderAlertLink={(id) => <span>{id}</span>}
         />
-      </FluentProvider>,
+      </>,
     );
     expect(screen.getByText(/Not now\./)).toBeInTheDocument();
   });
