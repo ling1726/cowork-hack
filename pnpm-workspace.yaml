@@ -3,3 +3,6 @@ packages:
   - 'apps/*'
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@hono/node-server@2.1.9'
+  - hono@4.13.19
