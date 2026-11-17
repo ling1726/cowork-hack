@@ -50,7 +50,7 @@ The product is a demo, not a production system. It has to be realistic enough th
 - TypeScript everywhere (Node backend, browser frontend).
 - Lightweight, proven open-source dependencies.
 - Monorepo.
-- Web UI: React, `@fluentui/react-components` (v9), TanStack Router (URL state), TanStack Query (server state), Zustand (UI state).
+- Web UI: React, shadcn/ui on Base UI with Tailwind v4, TanStack Router (URL state), TanStack Query (server state), Zustand (UI state). (Replaced Fluent UI v9 on 2026-11-17; see `2026-11-17-ui-shadcn-tailwind-design.md`.)
 - REST API. No database: in-memory, with seed data, and the state lasts until restart.
 - Playwright for end-to-end tests (the user has the Playwright skill installed).
 - Local toolchain: Node 25, npm 11. pnpm is enabled through corepack.
@@ -94,7 +94,7 @@ flowchart LR
 ├─ packages/
 │  ├─ domain/              # @app/domain   — Zod schemas, types, state machine, link builder (pure, no I/O)
 │  ├─ api-client/          # @app/api-client — openapi-fetch client + generated types
-│  └─ ui/                  # @app/ui       — presentational Fluent v9 components (no router, no query)
+│  └─ ui/                  # @app/ui       — presentational shadcn/ui + Tailwind components (no router, no query)
 ├─ apps/
 │  ├─ server/              # @app/server   — Hono REST API, in-memory store, seed
 │  ├─ web/                 # @app/web      — Vite + React SPA
@@ -204,7 +204,7 @@ Base path `/api`. JSON. Errors use `{ error: { code, message, details? } }` with
 
 ## 8. Web app (`apps/web`)
 
-**Stack:** Vite, React 19, Fluent UI v9 (`FluentProvider`, web light theme by default with a dark toggle), TanStack Router (file-based or code-based, the builder's call), TanStack Query, Zustand.
+**Stack:** Vite, React 19, shadcn/ui on Base UI with Tailwind v4 (neutral theme, light by default with a dark toggle), TanStack Router (file-based or code-based, the builder's call), TanStack Query, Zustand.
 
 **State ownership** (enforced by convention and review):
 
@@ -231,7 +231,7 @@ Filters never live in Zustand.
 - Materials: links and attachments, with add/upload.
 - Data: data-tab picker and table.
 
-Actions (acknowledge, close, reopen, escalate, edit assignees) open Fluent dialogs and collect the required fields. Mutations invalidate the alert, timeline and list queries.
+Actions (acknowledge, close, reopen, escalate, edit assignees) open dialogs and collect the required fields. Mutations invalidate the alert, timeline and list queries.
 
 **Header:** a demo user switcher (Zustand) that sets `X-User-Id` on every API request, and a **Queue** item with a count of the current user's pending requests (TanStack Query, `refetchInterval` about 3 s; no push).
 
@@ -241,7 +241,7 @@ Actions (acknowledge, close, reopen, escalate, edit assignees) open Fluent dialo
 
 ## 9. Shared UI (`packages/ui`)
 
-Presentational Fluent v9 components with **data-in, callbacks-out** props. They take no router, React Query or Zustand imports, and fetch nothing. The web app wraps them in containers. Phase 2 bundles wrap them with the MCP Apps bridge.
+Presentational shadcn/ui + Tailwind components with **data-in, callbacks-out** props. They take no router, React Query or Zustand imports, and fetch nothing. The web app wraps them in containers. Phase 2 bundles wrap them with the MCP Apps bridge.
 
 Initial components: `AlertStatusBadge`, `SeverityBadge`, `AlertHeader` (with `actions` and `onAction`), `AlertHighlights`, `AssigneesPanel`, `AlertTimeline`, `AlertSummaryCard` (the Cowork card: header + highlights + last 3 timeline entries + an "Open in app" slot), `AlertTable` (sortable list), `DataTabTable`, `ActionRequestCard` (action, rationale, payload preview, Approve/Reject callbacks). The request card is shared so phase 2 can show it in Cowork.
 
@@ -307,7 +307,7 @@ A throwaway check that a Streamable HTTP MCP server on `localhost` (one hello-wo
 
 ## 15. Left to the builder
 
-- File-based vs code-based TanStack Router routes. Exact component layout and visual polish within Fluent defaults.
+- File-based vs code-based TanStack Router routes. Exact component layout and visual polish within shadcn defaults.
 - Exact background seed content (it must stay realistic for hedge fund trade surveillance and deterministic).
 - Lint/format setup (decided: oxlint for linting, oxfmt for formatting).
 - Whether `e2e/` lives at the root or inside `apps/web`.

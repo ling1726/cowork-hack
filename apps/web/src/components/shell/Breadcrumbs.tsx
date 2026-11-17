@@ -16,13 +16,22 @@ export interface Crumb {
 
 const SECTIONS = { alerts: 'Alerts', queue: 'Queue' } as const;
 
+/** Decodes a path segment; a malformed escape (a pasted, broken link) is shown as typed. */
+function decodeSegment(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
 /** Breadcrumbs for an app path: the section, then the record id on detail pages. */
 export function breadcrumbsFor(pathname: string): Crumb[] {
   const [section, id] = pathname.split('/').filter(Boolean);
   if (section !== 'alerts' && section !== 'queue') return [];
   const label = SECTIONS[section];
   if (!id) return [{ label }];
-  return [{ label, to: `/${section}` }, { label: decodeURIComponent(id) }];
+  return [{ label, to: `/${section}` }, { label: decodeSegment(id) }];
 }
 
 export function Breadcrumbs() {

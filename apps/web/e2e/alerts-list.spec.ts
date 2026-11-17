@@ -158,6 +158,8 @@ test('faceted filter works from the keyboard', async ({ page }) => {
   const trigger = filterButton(page, 'Status');
   await trigger.focus();
   await page.keyboard.press('Enter');
+  // Opening moves focus into the popover's filter input; type once it is there.
+  await expect(page.getByRole('textbox', { name: 'Filter Status options' })).toBeFocused();
   await page.keyboard.type('prog');
   await expect(page.getByRole('checkbox')).toHaveCount(1);
   await page.keyboard.press('Tab');

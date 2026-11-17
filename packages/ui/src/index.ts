@@ -1,4 +1,8 @@
-export { ActionRequestCard, type ActionRequestCardProps } from './components/ActionRequestCard.tsx';
+export {
+  ActionRequestCard,
+  RequestStatusBadge,
+  type ActionRequestCardProps,
+} from './components/ActionRequestCard.tsx';
 export { AlertHeader, primaryAction, type AlertHeaderProps } from './components/AlertHeader.tsx';
 export { AlertHighlights } from './components/AlertHighlights.tsx';
 export { AlertStatusBadge } from './components/AlertStatusBadge.tsx';
@@ -10,7 +14,7 @@ export { DataTabTable } from './components/DataTabTable.tsx';
 export { SeverityBadge } from './components/SeverityBadge.tsx';
 export { StatCard, type StatCardProps } from './components/StatCard.tsx';
 export { ViaClaudeTag } from './components/ViaClaudeTag.tsx';
-export { formatDateTime, initialsOf, nameOf } from './format.ts';
+export { formatDateTime, formatShortDateTime, initialsOf, nameOf } from './format.ts';
 export { UserAvatar } from './components/UserAvatar.tsx';
 
 // shadcn/ui primitives (Base UI) and the class helper.
