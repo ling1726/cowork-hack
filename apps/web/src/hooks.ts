@@ -1,3 +1,4 @@
+import type { AlertListSearch } from '@app/domain';
 import { unwrap } from '@app/api-client';
 import { useQuery } from '@tanstack/react-query';
 import { api, queryKeys } from './api.ts';
@@ -36,4 +37,17 @@ export function useTimeline(id: string, opts: { poll?: boolean } = {}) {
       unwrap(await api.GET('/api/alerts/{id}/timeline', { params: { path: { id } } })),
     refetchInterval: opts.poll ? POLL_MS : false,
   });
+}
+
+/**
+ * Total number of alerts matching `search` (one-row page). Shares the `['alerts']` key prefix,
+ * so every mutation that invalidates alert lists refreshes these counts too.
+ */
+export function useAlertCount(search: AlertListSearch): number | undefined {
+  const query = { ...search, pageSize: 1 };
+  const { data } = useQuery({
+    queryKey: queryKeys.alerts(query),
+    queryFn: async () => unwrap(await api.GET('/api/alerts', { params: { query } })),
+  });
+  return data?.total;
 }
