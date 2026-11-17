@@ -69,6 +69,8 @@ test('tabs are bound to ?tab and the default tab stays out of the URL', async ({
 
 test('posting a comment appears in the timeline with my name', async ({ page }) => {
   await page.goto('/alerts/ALT-1042?tab=timeline');
+  // Count only once the timeline has loaded, or `before` can be 0.
+  await expect(page.getByTestId('timeline-event').first()).toBeVisible();
   const before = await page.getByTestId('timeline-event').count();
   await page.getByRole('textbox', { name: 'Add a comment' }).fill('Escalating to compliance.');
   await page.getByRole('button', { name: 'Post comment' }).click();
