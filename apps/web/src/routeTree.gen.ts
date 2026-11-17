@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsIndexRouteImport } from './routes/alerts.index'
+import { Route as AlertsAlertIdRouteImport } from './routes/alerts.$alertId'
 import { Route as QueueIndexRouteImport } from './routes/queue.index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const AlertsIndexRoute = AlertsIndexRouteImport.update({
   path: '/alerts/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsAlertIdRoute = AlertsAlertIdRouteImport.update({
+  id: '/alerts/$alertId',
+  path: '/alerts/$alertId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QueueIndexRoute = QueueIndexRouteImport.update({
   id: '/queue/',
   path: '/queue/',
@@ -31,30 +37,34 @@ const QueueIndexRoute = QueueIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts/$alertId': typeof AlertsAlertIdRoute
   '/alerts/': typeof AlertsIndexRoute
   '/queue/': typeof QueueIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts/$alertId': typeof AlertsAlertIdRoute
   '/alerts': typeof AlertsIndexRoute
   '/queue': typeof QueueIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts/$alertId': typeof AlertsAlertIdRoute
   '/alerts/': typeof AlertsIndexRoute
   '/queue/': typeof QueueIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alerts/' | '/queue/'
+  fullPaths: '/' | '/alerts/$alertId' | '/alerts/' | '/queue/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alerts' | '/queue'
-  id: '__root__' | '/' | '/alerts/' | '/queue/'
+  to: '/' | '/alerts/$alertId' | '/alerts' | '/queue'
+  id: '__root__' | '/' | '/alerts/$alertId' | '/alerts/' | '/queue/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsAlertIdRoute: typeof AlertsAlertIdRoute
   AlertsIndexRoute: typeof AlertsIndexRoute
   QueueIndexRoute: typeof QueueIndexRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts/$alertId': {
+      id: '/alerts/$alertId'
+      path: '/alerts/$alertId'
+      fullPath: '/alerts/$alertId'
+      preLoaderRoute: typeof AlertsAlertIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/queue/': {
       id: '/queue/'
       path: '/queue'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsAlertIdRoute: AlertsAlertIdRoute,
   AlertsIndexRoute: AlertsIndexRoute,
   QueueIndexRoute: QueueIndexRoute,
 }

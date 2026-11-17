@@ -94,14 +94,10 @@ export function AlertTable({ items, sort, onSortChange, renderAlertLink }: Alert
       columns={columns}
       getRowId={(a: AlertSummary) => a.id}
       sortable
-      sortState={
-        current.field
-          ? {
-              sortColumn: current.field,
-              sortDirection: current.descending ? 'descending' : 'ascending',
-            }
-          : undefined
-      }
+      sortState={{
+        sortColumn: current.field,
+        sortDirection: current.descending ? 'descending' : 'ascending',
+      }}
       onSortChange={(_e, state) => handleSort(state.sortColumn as SortField)}
       focusMode="composite"
       aria-label="Alerts"
