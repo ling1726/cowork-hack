@@ -1,0 +1,26 @@
+{
+  "name": "alerts-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n server,web,mcp \"pnpm --filter @app/server dev\" \"pnpm --filter @app/web dev\" \"pnpm --filter @app/mcp-server dev\"",
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "lint": "oxlint && oxfmt --check",
+    "format": "oxfmt",
+    "e2e": "pnpm --filter @app/web e2e"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "concurrently": "^10.0.7",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.21.0"
+}

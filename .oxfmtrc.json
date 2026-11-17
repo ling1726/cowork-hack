@@ -1,0 +1,16 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 100,
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "test-results",
+    "playwright-report",
+    "pnpm-lock.yaml",
+    "docs",
+    "packages/api-client/src/schema.d.ts",
+    "packages/api-client/src/openapi.json",
+    ".superpowers"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "unicorn", "oxc"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "test-results",
+    "playwright-report",
+    "packages/api-client/src/schema.d.ts",
+    "packages/api-client/src/openapi.json",
+    "spikes",
+    ".superpowers"
+  ]
+}
