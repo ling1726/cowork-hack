@@ -1,5 +1,5 @@
 import type { Alert, User } from '@app/domain';
-import { Link, Text, makeStyles, tokens } from '@fluentui/react-components';
+import { Button, Link, Text, makeStyles, tokens } from '@fluentui/react-components';
 import { nameOf, formatDateTime } from '@app/ui';
 
 const useStyles = makeStyles({
@@ -22,7 +22,14 @@ const formatSize = (bytes: number) =>
       ? `${(bytes / 1024).toFixed(1)} KB`
       : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 
-export function MaterialsTab({ alert, users }: { alert: Alert; users: User[] }) {
+export interface MaterialsTabProps {
+  alert: Alert;
+  users: User[];
+  onAddLink?: () => void;
+  onUpload?: () => void;
+}
+
+export function MaterialsTab({ alert, users, onAddLink, onUpload }: MaterialsTabProps) {
   const styles = useStyles();
   return (
     <div className={styles.root}>
@@ -30,6 +37,11 @@ export function MaterialsTab({ alert, users }: { alert: Alert; users: User[] }) 
         <Text as="h2" weight="semibold" size={400}>
           Links
         </Text>
+        {onAddLink && (
+          <Button size="small" onClick={onAddLink}>
+            Add link
+          </Button>
+        )}
         {alert.links.length === 0 ? (
           <Text block>No links yet.</Text>
         ) : (
@@ -51,6 +63,11 @@ export function MaterialsTab({ alert, users }: { alert: Alert; users: User[] }) 
         <Text as="h2" weight="semibold" size={400}>
           Attachments
         </Text>
+        {onUpload && (
+          <Button size="small" onClick={onUpload}>
+            Upload attachment
+          </Button>
+        )}
         {alert.attachments.length === 0 ? (
           <Text block>No attachments yet.</Text>
         ) : (
