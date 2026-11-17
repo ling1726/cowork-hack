@@ -1,8 +1,23 @@
-import { Button, Dropdown, Option, Text, makeStyles, tokens } from '@fluentui/react-components';
-import { WeatherMoon24Regular, WeatherSunny24Regular } from '@fluentui/react-icons';
+import {
+  Badge,
+  Button,
+  Dropdown,
+  Option,
+  Text,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import {
+  Settings24Regular,
+  WeatherMoon24Regular,
+  WeatherSunny24Regular,
+} from '@fluentui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
+import { useState } from 'react';
 import { useUsers } from '../hooks.ts';
+import { usePendingCount } from '../hooks/useActionRequests.ts';
+import { SettingsDialog } from './SettingsDialog.tsx';
 import { useUiStore } from '../store/ui-store.ts';
 
 const useStyles = makeStyles({
@@ -39,6 +54,8 @@ export function AppHeader() {
   const theme = useUiStore((s) => s.theme);
   const setTheme = useUiStore((s) => s.setTheme);
   const current = users.find((u) => u.id === currentUserId);
+  const { data: pending = 0 } = usePendingCount();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const link = (to: '/alerts' | '/queue', label: string, extra?: React.ReactNode) => (
     <Link
@@ -60,7 +77,15 @@ export function AppHeader() {
       </Link>
       <nav className={styles.nav} aria-label="Primary">
         {link('/alerts', 'Alerts')}
-        {link('/queue', 'Queue')}
+        {link(
+          '/queue',
+          'Queue',
+          pending > 0 && (
+            <Badge data-testid="queue-badge" appearance="filled" color="danger" size="small">
+              {pending}
+            </Badge>
+          ),
+        )}
       </nav>
       <div className={styles.spacer} />
       <div className={styles.right}>
@@ -83,6 +108,13 @@ export function AppHeader() {
           ))}
         </Dropdown>
         <Button
+          data-testid="settings-button"
+          appearance="subtle"
+          aria-label="Settings"
+          icon={<Settings24Regular />}
+          onClick={() => setSettingsOpen(true)}
+        />
+        <Button
           data-testid="theme-toggle"
           appearance="subtle"
           aria-label="Toggle theme"
@@ -90,6 +122,7 @@ export function AppHeader() {
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         />
       </div>
+      {settingsOpen && <SettingsDialog onClose={() => setSettingsOpen(false)} />}
     </header>
   );
 }

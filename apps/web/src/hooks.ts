@@ -18,17 +18,22 @@ export function useMeta() {
   });
 }
 
-export function useAlert(id: string) {
+/** How often views that must notice Claude's activity re-check the server (there is no push). */
+export const POLL_MS = 3000;
+
+export function useAlert(id: string, opts: { poll?: boolean } = {}) {
   return useQuery({
     queryKey: queryKeys.alert(id),
     queryFn: async () => unwrap(await api.GET('/api/alerts/{id}', { params: { path: { id } } })),
+    refetchInterval: opts.poll ? POLL_MS : false,
   });
 }
 
-export function useTimeline(id: string) {
+export function useTimeline(id: string, opts: { poll?: boolean } = {}) {
   return useQuery({
     queryKey: queryKeys.timeline(id),
     queryFn: async () =>
       unwrap(await api.GET('/api/alerts/{id}/timeline', { params: { path: { id } } })),
+    refetchInterval: opts.poll ? POLL_MS : false,
   });
 }

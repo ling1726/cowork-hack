@@ -30,6 +30,7 @@ import { useState } from 'react';
 import Markdown from 'react-markdown';
 import { CommentComposer } from '../components/CommentComposer.tsx';
 import { DataTabView } from '../components/DataTabView.tsx';
+import { PendingRequestsBanner } from '../components/PendingRequestsBanner.tsx';
 import { MaterialsTab } from '../components/MaterialsTab.tsx';
 import { AcknowledgeDialog } from '../components/dialogs/AcknowledgeDialog.tsx';
 import { AddLinkDialog } from '../components/dialogs/AddLinkDialog.tsx';
@@ -122,8 +123,8 @@ function AlertDetailPage() {
   const { alertId } = Route.useParams();
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const alertQuery = useAlert(alertId);
-  const timelineQuery = useTimeline(alertId);
+  const alertQuery = useAlert(alertId, { poll: true });
+  const timelineQuery = useTimeline(alertId, { poll: true });
   const { data: users = [] } = useUsers();
 
   if (alertQuery.isPending) return <Spinner label="Loading alert…" />;
@@ -169,6 +170,7 @@ function AlertDetailPage() {
         }}
         pendingCount={alert.pendingActionRequestIds.length}
       />
+      <PendingRequestsBanner requestIds={alert.pendingActionRequestIds} />
       <AlertHighlights highlights={alert.highlights} />
       <div className={styles.columns}>
         <div>
