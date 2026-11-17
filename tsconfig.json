@@ -5,6 +5,7 @@
     { "path": "apps/server" },
     { "path": "packages/api-client" },
     { "path": "packages/ui" },
-    { "path": "apps/web" }
+    { "path": "apps/web" },
+    { "path": "apps/mcp-server" }
   ]
 }
