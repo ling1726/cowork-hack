@@ -1272,6 +1272,13 @@
                           "approvedBy": {
                             "type": "string"
                           },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
+                          },
                           "type": {
                             "type": "string",
                             "enum": [
@@ -1316,6 +1323,13 @@
                           },
                           "approvedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "type": {
                             "type": "string",
@@ -1365,6 +1379,13 @@
                           },
                           "approvedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "type": {
                             "type": "string",
@@ -1432,6 +1453,13 @@
                           "approvedBy": {
                             "type": "string"
                           },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
+                          },
                           "type": {
                             "type": "string",
                             "enum": [
@@ -1484,6 +1512,13 @@
                           },
                           "approvedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "type": {
                             "type": "string",
@@ -1538,6 +1573,13 @@
                           "approvedBy": {
                             "type": "string"
                           },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
+                          },
                           "type": {
                             "type": "string",
                             "enum": [
@@ -1587,6 +1629,13 @@
                           "approvedBy": {
                             "type": "string"
                           },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
+                          },
                           "type": {
                             "type": "string",
                             "enum": [
@@ -1635,6 +1684,13 @@
                           },
                           "approvedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "type": {
                             "type": "string",
@@ -1692,6 +1748,13 @@
                           },
                           "approvedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "type": {
                             "type": "string",
@@ -2546,6 +2609,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -2590,6 +2660,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -2639,6 +2716,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -2706,6 +2790,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -2758,6 +2849,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -2812,6 +2910,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -2861,6 +2966,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -2909,6 +3021,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -2966,6 +3085,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -3050,6 +3176,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -3142,6 +3275,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -3788,6 +3928,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -3832,6 +3979,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -3881,6 +4035,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -3948,6 +4109,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -4000,6 +4168,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -4054,6 +4229,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -4103,6 +4285,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -4151,6 +4340,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -4208,6 +4404,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -4292,6 +4495,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -4384,6 +4594,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -5043,6 +5260,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -5087,6 +5311,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -5136,6 +5367,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -5203,6 +5441,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -5255,6 +5500,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -5309,6 +5561,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -5358,6 +5617,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -5406,6 +5672,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -5463,6 +5736,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -6092,6 +6372,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -6136,6 +6423,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -6185,6 +6479,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -6252,6 +6553,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -6304,6 +6612,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -6358,6 +6673,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -6407,6 +6729,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -6455,6 +6784,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -6512,6 +6848,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -7146,6 +7489,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -7190,6 +7540,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -7239,6 +7596,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -7306,6 +7670,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -7358,6 +7729,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -7412,6 +7790,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -7461,6 +7846,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -7509,6 +7901,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -7566,6 +7965,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -8199,6 +8605,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -8243,6 +8656,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -8292,6 +8712,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -8359,6 +8786,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -8411,6 +8845,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -8465,6 +8906,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -8514,6 +8962,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -8562,6 +9017,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -8619,6 +9081,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -9253,6 +9722,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -9297,6 +9773,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -9346,6 +9829,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -9413,6 +9903,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -9465,6 +9962,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -9519,6 +10023,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -9568,6 +10079,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -9616,6 +10134,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -9673,6 +10198,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -10301,6 +10833,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -10345,6 +10884,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -10394,6 +10940,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -10461,6 +11014,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -10513,6 +11073,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -10567,6 +11134,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -10616,6 +11190,13 @@
                             "approvedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "type": {
                               "type": "string",
                               "enum": [
@@ -10664,6 +11245,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -10721,6 +11309,13 @@
                             },
                             "approvedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "type": {
                               "type": "string",
@@ -11035,6 +11630,13 @@
                           "decidedBy": {
                             "type": "string"
                           },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
+                          },
                           "rejectReason": {
                             "type": "string"
                           },
@@ -11126,6 +11728,13 @@
                           },
                           "decidedBy": {
                             "type": "string"
+                          },
+                          "decidedIn": {
+                            "type": "string",
+                            "enum": [
+                              "app",
+                              "cowork"
+                            ]
                           },
                           "rejectReason": {
                             "type": "string"
@@ -11276,6 +11885,13 @@
                             "decidedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "rejectReason": {
                               "type": "string"
                             },
@@ -11367,6 +11983,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -11614,6 +12237,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -11658,6 +12288,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -11707,6 +12344,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -11774,6 +12418,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -11826,6 +12477,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -11880,6 +12538,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -11929,6 +12594,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -11977,6 +12649,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12034,6 +12713,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12170,6 +12856,13 @@
                             "decidedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "rejectReason": {
                               "type": "string"
                             },
@@ -12261,6 +12954,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -12508,6 +13208,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -12552,6 +13259,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12601,6 +13315,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12668,6 +13389,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -12720,6 +13448,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12774,6 +13509,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -12823,6 +13565,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -12871,6 +13620,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -12928,6 +13684,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -13173,6 +13936,13 @@
                             "decidedBy": {
                               "type": "string"
                             },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
+                            },
                             "rejectReason": {
                               "type": "string"
                             },
@@ -13264,6 +14034,13 @@
                             },
                             "decidedBy": {
                               "type": "string"
+                            },
+                            "decidedIn": {
+                              "type": "string",
+                              "enum": [
+                                "app",
+                                "cowork"
+                              ]
                             },
                             "rejectReason": {
                               "type": "string"
@@ -13511,6 +14288,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -13555,6 +14339,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -13604,6 +14395,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -13671,6 +14469,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -13723,6 +14528,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -13777,6 +14589,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -13826,6 +14645,13 @@
                                 "approvedBy": {
                                   "type": "string"
                                 },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
+                                },
                                 "type": {
                                   "type": "string",
                                   "enum": [
@@ -13874,6 +14700,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
@@ -13931,6 +14764,13 @@
                                 },
                                 "approvedBy": {
                                   "type": "string"
+                                },
+                                "decidedIn": {
+                                  "type": "string",
+                                  "enum": [
+                                    "app",
+                                    "cowork"
+                                  ]
                                 },
                                 "type": {
                                   "type": "string",
