@@ -1,0 +1,1 @@
+export const T0 = new Date('2026-11-17T09:00:00.000Z');
