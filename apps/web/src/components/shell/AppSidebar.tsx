@@ -40,7 +40,7 @@ export function AppSidebar() {
               </span>
               <span className="flex flex-col gap-0.5 leading-none">
                 <span className="font-semibold">Surveillance</span>
-                <span className="text-xs text-muted-foreground">Trade alerts</span>
+                <span className="text-xs text-sidebar-foreground/60">Trade alerts</span>
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>

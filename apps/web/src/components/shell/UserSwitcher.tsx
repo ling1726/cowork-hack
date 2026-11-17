@@ -32,7 +32,7 @@ export function UserSwitcher() {
         <span className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
           <SelectValue className="truncate font-medium" />
           {current && (
-            <span className="truncate text-xs text-muted-foreground">
+            <span className="truncate text-xs text-sidebar-foreground/60">
               {USER_ROLE_LABELS[current.role]}
             </span>
           )}
