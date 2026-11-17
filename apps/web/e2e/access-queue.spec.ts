@@ -203,3 +203,25 @@ test('queue rows link to the request', async ({ page, agentRequest }) => {
     'Recommend escalating to the Compliance Lead.',
   );
 });
+
+test('a request approved in Cowork is marked in the queue and the timeline', async ({
+  page,
+  agentRequest,
+}) => {
+  await agentRequest('/api/alerts/ALT-1042/comments', comment('Approved on the card.'));
+  const decided = await page.request.post(
+    'http://localhost:3001/api/action-requests/AR-0001/approve',
+    {
+      headers: { 'X-User-Id': 'U-01', Authorization: 'Bearer test-cowork-token' },
+    },
+  );
+  expect(decided.ok()).toBe(true);
+  await page.goto('/queue/AR-0001');
+  await expect(page.getByTestId('decision')).toHaveText('Approved by Priya Shah in Cowork');
+  await page.goto('/queue?status=approved');
+  await expect(page.getByTestId('decided-in')).toHaveText('in Cowork');
+  await page.goto('/alerts/ALT-1042?tab=timeline');
+  await expect(page.getByTestId('timeline-event').last().getByTestId('via-claude')).toHaveText(
+    'via Claude · approved by Priya Shah in Cowork',
+  );
+});

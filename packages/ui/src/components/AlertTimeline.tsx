@@ -52,7 +52,7 @@ export function AlertTimeline({ events, users, renderLink }: AlertTimelineProps)
       }
       case 'action_rejected':
         return {
-          summary: `Rejected request ${e.requestId}`,
+          summary: `Rejected request ${e.requestId}${e.decidedIn === 'cowork' ? ' in Cowork' : ''}`,
           ...(e.reason ? { detail: e.reason } : {}),
         };
     }
@@ -81,6 +81,7 @@ export function AlertTimeline({ events, users, renderLink }: AlertTimelineProps)
                 {e.via === 'claude' && (
                   <ViaClaudeTag
                     {...(e.approvedBy ? { approvedByName: nameOf(users, e.approvedBy) } : {})}
+                    {...(e.decidedIn ? { decidedIn: e.decidedIn } : {})}
                   />
                 )}
               </div>
