@@ -1,8 +1,9 @@
 import { LinkBody } from '@app/domain';
-import { Field, Input } from '@fluentui/react-components';
+import { Input } from '@app/ui';
 import { useState } from 'react';
 import { useAlertMutations } from '../../hooks/useAlertMutations.ts';
 import { ActionDialog } from './ActionDialog.tsx';
+import { FormField } from './FormField.tsx';
 
 export function AddLinkDialog({ alertId, onClose }: { alertId: string; onClose: () => void }) {
   const { addLink } = useAlertMutations(alertId);
@@ -18,22 +19,29 @@ export function AddLinkDialog({ alertId, onClose }: { alertId: string; onClose: 
       onSubmit={() => addLink.mutateAsync({ title: title.trim(), url: url.trim() })}
       onClose={onClose}
     >
-      <Field label="Title" required>
-        <Input
-          aria-label="Title"
-          value={title}
-          maxLength={200}
-          onChange={(_e, d) => setTitle(d.value)}
-        />
-      </Field>
-      <Field
-        label="URL"
-        required
-        validationState={urlInvalid ? 'error' : 'none'}
-        validationMessage={urlInvalid ? 'Enter a valid http(s) URL' : undefined}
-      >
-        <Input aria-label="URL" value={url} onChange={(_e, d) => setUrl(d.value)} />
-      </Field>
+      <FormField label="Title">
+        {(id) => (
+          <Input
+            id={id}
+            aria-label="Title"
+            value={title}
+            maxLength={200}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        )}
+      </FormField>
+      <FormField label="URL" error={urlInvalid ? 'Enter a valid http(s) URL' : undefined}>
+        {(id) => (
+          <Input
+            id={id}
+            aria-label="URL"
+            aria-invalid={urlInvalid || undefined}
+            placeholder="https://"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        )}
+      </FormField>
     </ActionDialog>
   );
 }

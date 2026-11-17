@@ -1,4 +1,3 @@
-import { Text } from '@fluentui/react-components';
 import { useAlertMutations } from '../../hooks/useAlertMutations.ts';
 import { ActionDialog } from './ActionDialog.tsx';
 
@@ -12,7 +11,9 @@ export function AcknowledgeDialog({ alertId, onClose }: { alertId: string; onClo
       onSubmit={() => acknowledge.mutateAsync()}
       onClose={onClose}
     >
-      <Text>Take ownership of this alert. It moves to In Progress.</Text>
+      <p className="text-sm text-muted-foreground">
+        Take ownership of this alert. It moves to In Progress.
+      </p>
     </ActionDialog>
   );
 }

@@ -1,7 +1,8 @@
-import { Field, Textarea } from '@fluentui/react-components';
+import { Textarea } from '@app/ui';
 import { useState } from 'react';
 import { useAlertMutations } from '../../hooks/useAlertMutations.ts';
 import { ActionDialog } from './ActionDialog.tsx';
+import { FormField } from './FormField.tsx';
 
 export function ReopenDialog({ alertId, onClose }: { alertId: string; onClose: () => void }) {
   const { reopen } = useAlertMutations(alertId);
@@ -15,14 +16,17 @@ export function ReopenDialog({ alertId, onClose }: { alertId: string; onClose: (
       onSubmit={() => reopen.mutateAsync(trimmed)}
       onClose={onClose}
     >
-      <Field label="Reason" required>
-        <Textarea
-          aria-label="Reason"
-          value={reason}
-          maxLength={2000}
-          onChange={(_e, d) => setReason(d.value)}
-        />
-      </Field>
+      <FormField label="Reason">
+        {(id) => (
+          <Textarea
+            id={id}
+            aria-label="Reason"
+            value={reason}
+            maxLength={2000}
+            onChange={(e) => setReason(e.target.value)}
+          />
+        )}
+      </FormField>
     </ActionDialog>
   );
 }

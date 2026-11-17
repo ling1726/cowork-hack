@@ -1,37 +1,8 @@
 import type { Alert, User } from '@app/domain';
-import { Dropdown, Field, Option } from '@fluentui/react-components';
 import { useState } from 'react';
 import { useAlertMutations } from '../../hooks/useAlertMutations.ts';
 import { ActionDialog } from './ActionDialog.tsx';
-
-function UserPicker({
-  label,
-  users,
-  value,
-  onChange,
-}: {
-  label: string;
-  users: User[];
-  value: string;
-  onChange: (id: string) => void;
-}) {
-  return (
-    <Field label={label} required>
-      <Dropdown
-        aria-label={label}
-        value={users.find((u) => u.id === value)?.name ?? value}
-        selectedOptions={[value]}
-        onOptionSelect={(_e, d) => d.optionValue && onChange(d.optionValue)}
-      >
-        {users.map((u) => (
-          <Option key={u.id} value={u.id} text={u.name}>
-            {u.name}
-          </Option>
-        ))}
-      </Dropdown>
-    </Field>
-  );
-}
+import { FormField, SelectField } from './FormField.tsx';
 
 export function AssigneesDialog({
   alert,
@@ -46,6 +17,7 @@ export function AssigneesDialog({
   const [primaryId, setPrimaryId] = useState(alert.assignees.primaryId);
   const [backupId, setBackupId] = useState(alert.assignees.backupId);
   const same = primaryId === backupId;
+  const options = users.map((u) => ({ value: u.id, label: u.name }));
   return (
     <ActionDialog
       title="Edit assignees"
@@ -54,9 +26,35 @@ export function AssigneesDialog({
       onSubmit={() => setAssignees.mutateAsync({ primaryId, backupId })}
       onClose={onClose}
     >
-      <UserPicker label="Primary" users={users} value={primaryId} onChange={setPrimaryId} />
-      <UserPicker label="Backup" users={users} value={backupId} onChange={setBackupId} />
-      {same && <p role="alert">Primary and backup must be different people.</p>}
+      <FormField label="Primary">
+        {(id) => (
+          <SelectField
+            id={id}
+            label="Primary"
+            placeholder="Choose a person"
+            value={primaryId}
+            options={options}
+            onChange={setPrimaryId}
+          />
+        )}
+      </FormField>
+      <FormField label="Backup">
+        {(id) => (
+          <SelectField
+            id={id}
+            label="Backup"
+            placeholder="Choose a person"
+            value={backupId}
+            options={options}
+            onChange={setBackupId}
+          />
+        )}
+      </FormField>
+      {same && (
+        <p role="alert" className="text-sm text-destructive">
+          Primary and backup must be different people.
+        </p>
+      )}
     </ActionDialog>
   );
 }

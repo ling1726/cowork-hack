@@ -1,7 +1,8 @@
-import { Field } from '@fluentui/react-components';
+import { Input } from '@app/ui';
 import { useState } from 'react';
 import { useAlertMutations } from '../../hooks/useAlertMutations.ts';
 import { ActionDialog } from './ActionDialog.tsx';
+import { FormField } from './FormField.tsx';
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -23,19 +24,21 @@ export function UploadAttachmentDialog({
       onSubmit={() => uploadAttachment.mutateAsync(file as File)}
       onClose={onClose}
     >
-      <Field
+      <FormField
         label="File"
-        required
         hint="Up to 5 MB"
-        validationState={tooLarge ? 'error' : 'none'}
-        validationMessage={tooLarge ? 'This file is larger than 5 MB' : undefined}
+        error={tooLarge ? 'This file is larger than 5 MB' : undefined}
       >
-        <input
-          type="file"
-          aria-label="File"
-          onChange={(e) => setFile(e.target.files?.[0] ?? undefined)}
-        />
-      </Field>
+        {(id) => (
+          <Input
+            id={id}
+            type="file"
+            aria-label="File"
+            aria-invalid={tooLarge || undefined}
+            onChange={(e) => setFile(e.target.files?.[0] ?? undefined)}
+          />
+        )}
+      </FormField>
     </ActionDialog>
   );
 }
