@@ -24,11 +24,13 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
+    "@tailwindcss/vite": "4.3.5",
     "@tanstack/router-cli": "^1.168.0",
     "@tanstack/router-plugin": "^1.169.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "4.3.5",
     "vite": "^8.3.8"
   }
 }

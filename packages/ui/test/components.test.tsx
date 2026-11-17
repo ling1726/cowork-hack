@@ -119,7 +119,20 @@ const pending: ActionRequest = {
   createdAt: '2026-11-17T07:05:00.000Z',
 };
 
+// @app/ui stays presentational: no router, query or store; react-table is a pure render helper.
+const FORBIDDEN = /@tanstack\/react-(router|query)|from ['"]zustand/;
+// No path aliases: phase 2 bundles import this source as is.
+const ALIAS = /from ['"]@\//;
+
 describe('@app/ui', () => {
+  it('import guard allows react-table and bans router, query, zustand and path aliases', () => {
+    expect(FORBIDDEN.test("from '@tanstack/react-table'")).toBe(false);
+    expect(FORBIDDEN.test("from '@tanstack/react-router'")).toBe(true);
+    expect(FORBIDDEN.test("from '@tanstack/react-query'")).toBe(true);
+    expect(FORBIDDEN.test("from 'zustand'")).toBe(true);
+    expect(ALIAS.test("from '@/lib/utils'")).toBe(true);
+  });
+
   it('package source never imports router, query or zustand', () => {
     const files: string[] = [];
     const walk = (dir: string) => {
@@ -132,9 +145,9 @@ describe('@app/ui', () => {
     walk(join(import.meta.dirname, '../src'));
     expect(files.length).toBeGreaterThan(5);
     for (const file of files) {
-      expect(readFileSync(file, 'utf8'), file).not.toMatch(
-        /@tanstack\/|from 'zustand|from "zustand/,
-      );
+      const src = readFileSync(file, 'utf8');
+      expect(src, file).not.toMatch(FORBIDDEN);
+      expect(src, file).not.toMatch(ALIAS);
     }
   });
 
