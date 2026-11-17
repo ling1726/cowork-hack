@@ -192,3 +192,14 @@ test('turning the setting off makes the next agent comment apply directly (via C
     page.getByRole('switch', { name: "Require approval for Claude's actions" }),
   ).not.toBeChecked();
 });
+
+test('queue rows link to the request', async ({ page, agentRequest }) => {
+  await agentRequest('/api/alerts/ALT-1042/comments', comment());
+  await page.goto('/queue');
+  await expect(page.getByRole('table', { name: 'Requests' })).toBeVisible();
+  await card(page).first().getByRole('link', { name: 'AR-0001' }).click();
+  await expect(page).toHaveURL(`${BASE}/queue/AR-0001`);
+  await expect(page.getByTestId('payload-preview')).toHaveText(
+    'Recommend escalating to the Compliance Lead.',
+  );
+});

@@ -1,5 +1,5 @@
 import { ActionRequestCard } from '@app/ui';
-import { MessageBar, MessageBarBody, Text } from '@fluentui/react-components';
+import { CircleAlert } from 'lucide-react';
 import { useActionRequestOwner } from '../hooks/useRequestOwner.ts';
 import { useDecide, type ActionRequestDetail } from '../hooks/useActionRequests.ts';
 import { AlertLink } from './AlertLink.tsx';
@@ -10,13 +10,13 @@ export function RequestCard({ detail }: { detail: ActionRequestDetail }) {
   const { canDecide, ownerName } = useActionRequestOwner(detail.onBehalfOf);
   const error = approve.error ?? reject.error;
   const decidable = detail.status === 'pending' && canDecide;
-
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {error && (
-        <MessageBar intent="error">
-          <MessageBarBody>{error.message}</MessageBarBody>
-        </MessageBar>
+        <p role="alert" className="flex items-center gap-2 text-sm text-destructive">
+          <CircleAlert className="size-4" />
+          {error.message}
+        </p>
       )}
       <ActionRequestCard
         request={detail}
@@ -28,12 +28,14 @@ export function RequestCard({ detail }: { detail: ActionRequestDetail }) {
               onReject: (reason?: string) => reject.mutate(reason),
             }
           : {})}
-        renderAlertLink={(id, label) => <AlertLink id={id}>{label}</AlertLink>}
+        renderAlertLink={(id, label) => (
+          <AlertLink id={id}>
+            <span className="hover:underline">{label}</span>
+          </AlertLink>
+        )}
       />
       {detail.status === 'pending' && !canDecide && (
-        <Text block size={200}>
-          Only {ownerName} can decide this request.
-        </Text>
+        <p className="text-sm text-muted-foreground">Only {ownerName} can decide this request.</p>
       )}
     </div>
   );

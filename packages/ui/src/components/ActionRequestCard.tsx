@@ -20,6 +20,15 @@ const STATUS_TONE: Record<ActionRequestStatus, string> = {
   failed: 'border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-400',
 };
 
+/** The request's status as a coloured badge (`data-testid="request-status"`). */
+export function RequestStatusBadge({ status }: { status: ActionRequestStatus }) {
+  return (
+    <Badge data-testid="request-status" variant="outline" className={STATUS_TONE[status]}>
+      {ACTION_REQUEST_STATUS_LABELS[status]}
+    </Badge>
+  );
+}
+
 function Label({ children }: { children: ReactNode }) {
   return <div className="text-xs font-medium text-muted-foreground">{children}</div>;
 }
@@ -53,13 +62,7 @@ export function ActionRequestCard({
             <Bot aria-hidden className="size-4 text-violet-600 dark:text-violet-400" />
             {ACTION_REQUEST_KIND_LABELS[request.kind]}
           </CardTitle>
-          <Badge
-            data-testid="request-status"
-            variant="outline"
-            className={STATUS_TONE[request.status]}
-          >
-            {ACTION_REQUEST_STATUS_LABELS[request.status]}
-          </Badge>
+          <RequestStatusBadge status={request.status} />
         </div>
         <p className="text-xs text-muted-foreground">
           Requested by Claude for {request.onBehalfOf} · {formatDateTime(request.createdAt)} ·{' '}
