@@ -108,7 +108,8 @@ const APP_FILTERS = [
 ] as const;
 const NOT_IN_APP = ['updatedFrom', 'updatedTo', 'involvedUserId'] as const;
 
-export function registerTools(server: McpServer, deps: McpDeps): void {
+/** `opts.ui`: the client renders MCP Apps (wired up in ui.ts). */
+export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boolean }): void {
   const { api, appBaseUrl: base } = deps;
 
   const users = async () => unwrap(await api.GET('/api/users'));
