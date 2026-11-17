@@ -141,6 +141,7 @@ describe('approving and rejecting', () => {
       status: 'approved',
       decidedBy: 'U-01',
       decidedAt: clock.now.toISOString(),
+      decidedIn: 'app',
       alert: { id: 'ALT-1042' },
     });
     expect(body.resultEvent).toMatchObject({
@@ -150,6 +151,7 @@ describe('approving and rejecting', () => {
       via: 'claude',
       approvedBy: 'U-01',
       actionRequestId: 'AR-0001',
+      decidedIn: 'app',
     });
     expect(body.resultEventId).toBe(body.resultEvent.id);
     expect(store.eventsFor('ALT-1042').at(-1)?.id).toBe(body.resultEventId);
@@ -185,13 +187,19 @@ describe('approving and rejecting', () => {
     const r = await reject('AR-0001', 'Not now.');
     expect(r.status).toBe(200);
     const body = await json(r);
-    expect(body).toMatchObject({ status: 'rejected', rejectReason: 'Not now.', decidedBy: 'U-01' });
+    expect(body).toMatchObject({
+      status: 'rejected',
+      rejectReason: 'Not now.',
+      decidedBy: 'U-01',
+      decidedIn: 'app',
+    });
     expect(store.eventsFor('ALT-1042').at(-1)).toMatchObject({
       type: 'action_rejected',
       requestId: 'AR-0001',
       reason: 'Not now.',
       actorId: 'U-01',
       via: 'app',
+      decidedIn: 'app',
     });
     expect(
       store

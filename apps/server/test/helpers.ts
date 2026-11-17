@@ -6,6 +6,7 @@ import { Store } from '../src/store/store.ts';
 
 export const T0 = new Date('2026-11-17T09:00:00.000Z');
 export const AGENT_TOKEN = 'test-agent-token';
+export const COWORK_TOKEN = 'test-cowork-token';
 
 /** A mutable clock so tests can advance time. */
 export interface Clock {
@@ -16,7 +17,13 @@ export function makeApp(start: Date = T0): { app: OpenAPIHono<Env>; store: Store
   const clock: Clock = { now: start };
   const now = () => clock.now;
   const store = new Store(buildSeed({ now: start, seed: 1042 }), now);
-  const app = createApp({ store, agentToken: AGENT_TOKEN, now, seed: 1042 });
+  const app = createApp({
+    store,
+    agentToken: AGENT_TOKEN,
+    coworkToken: COWORK_TOKEN,
+    now,
+    seed: 1042,
+  });
   return { app, store, clock };
 }
 
@@ -24,6 +31,12 @@ export const asUser = (id: string): Record<string, string> => ({ 'X-User-Id': id
 export const asAgent = (id: string): Record<string, string> => ({
   'X-User-Id': id,
   Authorization: `Bearer ${AGENT_TOKEN}`,
+});
+
+/** The demo user acting through a Cowork card (approve/reject only). */
+export const asCowork = (id: string): Record<string, string> => ({
+  'X-User-Id': id,
+  Authorization: `Bearer ${COWORK_TOKEN}`,
 });
 
 export async function call(

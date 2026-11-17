@@ -3,6 +3,7 @@ import {
   type ActionRequest,
   type ActionRequestDetail,
   type Alert,
+  type DecisionSurface,
   type Via,
 } from '@app/domain';
 import { ApiError } from '../errors.ts';
@@ -113,9 +114,14 @@ function loadDecidable(store: Store, id: string, caller: string): ActionRequest 
 }
 
 /** Approves a pending request. If the alert no longer allows the action, the request fails instead. */
-export function approveRequest(store: Store, id: string, caller: string): ActionRequestDetail {
+export function approveRequest(
+  store: Store,
+  id: string,
+  caller: string,
+  decidedIn: DecisionSurface,
+): ActionRequestDetail {
   const request = loadDecidable(store, id, caller);
-  const decided = { decidedAt: store.now().toISOString(), decidedBy: caller };
+  const decided = { decidedAt: store.now().toISOString(), decidedBy: caller, decidedIn };
   const cmd: GateCommand =
     request.kind === 'add_comment'
       ? { kind: 'add_comment', body: request.payload.body }
@@ -128,6 +134,7 @@ export function approveRequest(store: Store, id: string, caller: string): Action
       via: 'claude',
       actionRequestId: request.id,
       approvedBy: caller,
+      decidedIn,
     });
     updated = { ...request, ...decided, status: 'approved', resultEventId: event.id };
   } catch (err) {
@@ -147,6 +154,7 @@ export function rejectRequest(
   store: Store,
   id: string,
   caller: string,
+  decidedIn: DecisionSurface,
   reason?: string,
 ): ActionRequestDetail {
   const request = loadDecidable(store, id, caller);
@@ -157,6 +165,7 @@ export function rejectRequest(
     via: 'app',
     actionRequestId: request.id,
     requestId: request.id,
+    decidedIn,
     ...(reason ? { reason } : {}),
   });
   const updated: ActionRequest = {
@@ -164,6 +173,7 @@ export function rejectRequest(
     status: 'rejected',
     decidedAt: store.now().toISOString(),
     decidedBy: caller,
+    decidedIn,
     ...(reason ? { rejectReason: reason } : {}),
   };
   store.actionRequests.set(id, updated);

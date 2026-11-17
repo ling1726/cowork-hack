@@ -19,11 +19,11 @@ describe('agent detection', () => {
   it('no token → via app; valid token → via claude; wrong token → via app', async () => {
     const { app } = appWithProbes();
     const none = await (await call(app, 'GET', '/api/_whoami', { headers: asUser('U-01') })).json();
-    expect(none).toEqual({ userId: 'U-01', via: 'app', isAgent: false });
+    expect(none).toEqual({ userId: 'U-01', via: 'app', isAgent: false, surface: 'app' });
     const agent = await (
       await call(app, 'GET', '/api/_whoami', { headers: asAgent('U-01') })
     ).json();
-    expect(agent).toEqual({ userId: 'U-01', via: 'claude', isAgent: true });
+    expect(agent).toEqual({ userId: 'U-01', via: 'claude', isAgent: true, surface: 'app' });
     const wrong = await (
       await call(app, 'GET', '/api/_whoami', {
         headers: { 'X-User-Id': 'U-01', Authorization: 'Bearer nope' },

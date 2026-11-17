@@ -1,6 +1,7 @@
 import {
   checkTransition,
   type Alert,
+  type DecisionSurface,
   type ResolutionOutcome,
   type TimelineEvent,
   type Transition,
@@ -24,6 +25,8 @@ export interface Actor {
   via: Via;
   actionRequestId?: string;
   approvedBy?: string;
+  /** Where the human approved the request that produced this write. */
+  decidedIn?: DecisionSurface;
 }
 
 export interface CommandResult {
@@ -60,6 +63,7 @@ export function applyCommand(
     via: actor.via,
     ...(actor.actionRequestId ? { actionRequestId: actor.actionRequestId } : {}),
     ...(actor.approvedBy ? { approvedBy: actor.approvedBy } : {}),
+    ...(actor.decidedIn ? { decidedIn: actor.decidedIn } : {}),
   };
   const nowIso = () => store.now().toISOString();
   const statusEvent = (from: Alert['status'], to: Alert['status'], reason?: string) =>
