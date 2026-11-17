@@ -17,3 +17,18 @@ export function useMeta() {
     staleTime: 60_000,
   });
 }
+
+export function useAlert(id: string) {
+  return useQuery({
+    queryKey: queryKeys.alert(id),
+    queryFn: async () => unwrap(await api.GET('/api/alerts/{id}', { params: { path: { id } } })),
+  });
+}
+
+export function useTimeline(id: string) {
+  return useQuery({
+    queryKey: queryKeys.timeline(id),
+    queryFn: async () =>
+      unwrap(await api.GET('/api/alerts/{id}/timeline', { params: { path: { id } } })),
+  });
+}
