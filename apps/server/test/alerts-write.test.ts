@@ -317,12 +317,10 @@ describe('identity and agent guard', () => {
     expect(await unknown.json()).toMatchObject({ error: { code: 'unknown_user' } });
   });
 
-  it('agent token on every write route → 403 agent_forbidden (comments and acknowledge open up in Task 9)', async () => {
+  it('agent token on every other write route → 403 agent_forbidden', async () => {
     const { app, store } = setup();
     const agent = asAgent('U-01');
     const calls: Array<[string, string, unknown]> = [
-      ['POST', '/api/alerts/ALT-1042/comments', { body: 'x' }],
-      ['POST', '/api/alerts/ALT-1042/acknowledge', {}],
       ['POST', '/api/alerts/ALT-1013/close', { outcome: 'other', note: 'x' }],
       ['POST', '/api/alerts/ALT-0987/reopen', { reason: 'x' }],
       ['POST', '/api/alerts/ALT-1013/escalations', { toUserId: 'U-04', reason: 'x' }],

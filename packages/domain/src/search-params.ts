@@ -36,7 +36,7 @@ function lenientArray<T extends z.ZodEnum<any>>(e: T) {
 }
 
 /** Comma-separated enum array that rejects invalid members (API validation → 400). */
-function strictArray<T extends z.ZodEnum<any>>(e: T) {
+export function csvEnumArray<T extends z.ZodEnum<any>>(e: T) {
   return z
     .preprocess((v) => {
       const a = splitCsv(v);
@@ -78,10 +78,10 @@ export type AlertListSearch = z.output<typeof AlertListSearchSchema>;
 
 /** API query for GET /alerts. Invalid values are rejected. */
 export const AlertListQuerySchema = z.object({
-  status: strictArray(AlertStatus),
-  severity: strictArray(Severity),
-  category: strictArray(Category),
-  desk: strictArray(Desk),
+  status: csvEnumArray(AlertStatus),
+  severity: csvEnumArray(Severity),
+  category: csvEnumArray(Category),
+  desk: csvEnumArray(Desk),
   assigneeId: nonEmpty.optional(),
   traderId: nonEmpty.optional(),
   instrument: nonEmpty.optional(),

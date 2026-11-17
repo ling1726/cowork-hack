@@ -1,4 +1,6 @@
 import {
+  ActionRequestSchema,
+  AgentRationale,
   AlertSchema,
   AssigneesBody,
   CloseBody,
@@ -10,8 +12,10 @@ import {
 } from '@app/domain';
 import { createRoute, type OpenAPIHono, z } from '@hono/zod-openapi';
 import { forbidAgent, requireUser, type Env } from '../context.ts';
+import { submitOrApply } from '../services/agent-gate.ts';
 import { errorResponses } from '../errors.ts';
 import { applyCommand, type Command } from '../services/commands.ts';
+import type { GateCommand, GateResult } from '../services/agent-gate.ts';
 
 export const WriteResultSchema = z.object({ alert: AlertSchema, event: TimelineEventSchema });
 const IdParam = z.object({ id: z.string() });
@@ -54,16 +58,41 @@ const bodylessRoute = (path: string, summary: string) =>
     responses,
   });
 
-export const commentRoute = bodyRoute(
-  'post',
-  '/api/alerts/{id}/comments',
-  'Add a comment',
-  CommentBody,
-);
-export const acknowledgeRoute = bodylessRoute(
-  '/api/alerts/{id}/acknowledge',
-  'Acknowledge an alert',
-);
+const GateResponses = {
+  200: responses[200],
+  202: {
+    description: 'Claude request queued for approval in the app',
+    content: { 'application/json': { schema: z.object({ actionRequest: ActionRequestSchema }) } },
+  },
+  ...errorResponses(400, 403, 404, 409),
+};
+const optionalRationale = AgentRationale.shape.rationale.optional();
+
+export const commentRoute = createRoute({
+  method: 'post',
+  path: '/api/alerts/{id}/comments',
+  summary: 'Add a comment (Claude: queued for approval unless the user turned that off)',
+  tags: ['alerts'],
+  request: {
+    params: IdParam,
+    body: jsonBody(CommentBody.extend({ rationale: optionalRationale })),
+  },
+  responses: GateResponses,
+});
+export const acknowledgeRoute = createRoute({
+  method: 'post',
+  path: '/api/alerts/{id}/acknowledge',
+  summary: 'Acknowledge an alert (Claude: queued for approval unless the user turned that off)',
+  tags: ['alerts'],
+  request: {
+    params: IdParam,
+    body: {
+      required: false,
+      content: { 'application/json': { schema: z.object({ rationale: optionalRationale }) } },
+    },
+  },
+  responses: GateResponses,
+});
 const closeRoute = bodyRoute('post', '/api/alerts/{id}/close', 'Close an alert', CloseBody);
 const reopenRoute = bodyRoute(
   'post',
@@ -86,21 +115,30 @@ const assigneesRoute = bodyRoute(
 const linkRoute = bodyRoute('post', '/api/alerts/{id}/links', 'Add a link', LinkBody);
 
 export function registerAlertsWrite(app: OpenAPIHono<Env>): void {
-  // Human-only until Task 9 routes comments and acknowledge through the agent gate.
+  // Everything except comments and acknowledge is human-only.
   const run = (c: Parameters<typeof requireUser>[0], alertId: string, cmd: Command) => {
     forbidAgent(c);
     const userId = requireUser(c);
     return applyCommand(c.get('store'), alertId, cmd, { userId, via: 'app' });
   };
 
-  app.openapi(commentRoute, (c) =>
-    c.json(
-      run(c, c.req.valid('param').id, { kind: 'add_comment', body: c.req.valid('json').body }),
-      200,
-    ),
-  );
-  app.openapi(acknowledgeRoute, (c) =>
-    c.json(run(c, c.req.valid('param').id, { kind: 'acknowledge' }), 200),
+  const gate = (c: Parameters<typeof requireUser>[0], cmd: GateCommand, rationale?: string) => {
+    const userId = requireUser(c);
+    const { via } = c.get('ctx');
+    return submitOrApply(c.get('store'), c.req.param('id') ?? '', cmd, { userId, via }, rationale);
+  };
+  const respond = (c: { json: (body: unknown, status: 200 | 202) => Response }, r: GateResult) =>
+    r.kind === 'queued'
+      ? c.json({ actionRequest: r.actionRequest }, 202)
+      : c.json({ alert: r.alert, event: r.event }, 200);
+
+  app.openapi(commentRoute, (c) => {
+    const { body, rationale } = c.req.valid('json');
+    return respond(c, gate(c, { kind: 'add_comment', body }, rationale)) as never;
+  });
+  app.openapi(
+    acknowledgeRoute,
+    (c) => respond(c, gate(c, { kind: 'acknowledge' }, c.req.valid('json')?.rationale)) as never,
   );
   app.openapi(closeRoute, (c) =>
     c.json(run(c, c.req.valid('param').id, { kind: 'close', ...c.req.valid('json') }), 200),
