@@ -6,7 +6,7 @@
 
 We connect Claude to the alerts app through **one MCP server over Streamable HTTP**, packaged with a **Claude plugin** that carries an alert-investigation skill. We are not building a CLI, and we are not offering a stdio transport.
 
-The main reason is that MCP is the only way to reach the interactive UI phase. MCP Apps renders UI from MCP tool results, so any other route would be rebuilt when that phase starts. MCP is also the native way to connect to Cowork, and it lets clients ask the user to confirm before Claude changes an alert.
+The main reason is that MCP is the only way to reach the interactive UI phase. MCP Apps renders UI from MCP tool results, so any other route would be rebuilt when that phase starts. MCP is also the native way to connect to Cowork, and Claude can act as the user while the backend still detects and marks every agent action. Claude's writes wait in an access queue in the app until the user approves them.
 
 ## Context
 
@@ -25,7 +25,7 @@ flowchart LR
     Cowork[Claude Cowork]
     Code[Claude Code]
   end
-  MCP["MCP server<br/>7 tools, 2 confirmed writes<br/>later: ui:// resources"]
+  MCP["MCP server<br/>8 tools, 2 queued writes<br/>later: ui:// resources"]
   API["REST backend<br/>in-memory, seed data"]
   Web["Web app (React)<br/>Fluent UI, TanStack Router"]
   Cowork -- MCP over HTTP --> MCP
@@ -55,7 +55,7 @@ We compared three ways for Claude to reach the app. MCP plus a skill comes out a
 
 - **It is the only route to phase 2.** MCP Apps is an extension of MCP. A tool result points to a `ui://` resource, and Cowork renders that HTML in a sandboxed iframe that can call tools back. Any other route would be rebuilt as MCP when phase 2 starts.
 - **It is how Cowork connects to outside systems.** Cowork uses connectors, which are MCP servers. A CLI would have to be installed inside Cowork's sandbox and reach our server over the network, and that is fragile in a live demo.
-- **Writes are confirmed with no extra code.** Tools carry hints such as `readOnlyHint` and `destructiveHint`. Clients use them to ask the user before a write runs, which fits a compliance setting where Claude advises and a human approves.
+- **Agent writes are detected and gated.** Tools carry hints such as `readOnlyHint`, which clients use to prompt the user. We don't rely on that: the backend recognises the MCP server's agent credential and turns each Claude write into a pending request in the app's access queue. Nothing changes until the user approves it there, and Claude's credential can't approve.
 - **One server serves both clients.** Cowork and Claude Code use the same tools, links and audit trail, so we demo the same behaviour in both.
 - **Results are structured.** Tools return a short text summary for Claude plus `structuredContent` (typed JSON with deep links). Phase 2 UI renders that same JSON, so we don't need a second contract.
 
@@ -79,7 +79,7 @@ Keeping this in a skill means tool descriptions stay short and the schemas take 
 | --- | --- |
 | stdio transport | Both clients can use HTTP. A second transport doubles the setup docs and the test matrix for no gain in the demo. |
 | A CLI | It only helps Claude Code, and it adds nothing to phase 2. It's a day's work on top of the shared API client if we want it later. |
-| Full write parity with the app | In a compliance setting, "Claude closed the alert" is a hard sell. Writes stop at commenting and acknowledging, both confirmed by the user and recorded as "via Claude". |
+| Full write parity with the app | In a compliance setting, "Claude closed the alert" is a hard sell. Writes stop at commenting and acknowledging. Both go through the access queue and are recorded as "via Claude, approved by" the user. |
 | An LLM in the backend | Claude writes the recommendations. The backend only serves data that is rich enough to reason about. |
 
 ## Risks and open questions
@@ -89,12 +89,12 @@ Keeping this in a skill means tool descriptions stay short and the schemas take 
 | We haven't confirmed that Cowork can reach an MCP server on localhost | Build a throwaway hello-world tool in week 1 that returns a deep link. If localhost doesn't work, fall back to a tunnel (for example, cloudflared) for the demo. |
 | Deep links only resolve on the presenter's machine | Configure the app's base URL in one environment variable shared by the MCP server and the web app. Demo on one machine. |
 | Tool schemas use up context | Keep the tool set to 8 or fewer, with short descriptions. Workflow detail lives in the skill. |
-| Identity for actions taken "via Claude" | No real auth. The MCP server acts as a configured demo user, and every write is recorded with `via: "claude"` so the timeline shows it. |
+| Identity for actions taken "via Claude" | No real auth. Claude acts as the user. The MCP server sends a bearer agent token, so the backend detects agent origin itself rather than trusting a header, and records `via: claude` on every request and event. |
 | MCP Apps support in each client may change | Phase 1 depends only on text and links. Phase 2 falls back to the deep link when the client can't render UI. |
 
 ## Proposed tool surface
 
-There are seven tools: five that read and two that write after confirmation. Every result includes a `url` that deep links into the web app.
+There are eight tools: six that read and two that write through the access queue. Every result includes a `url` that deep links into the web app.
 
 | Tool | Kind | Returns |
 | --- | --- | --- |
@@ -103,7 +103,7 @@ There are seven tools: five that read and two that write after confirmation. Eve
 | `get_alert_timeline` | read | Comments, status changes and escalations, oldest first |
 | `find_related_alerts` | read | Alerts that share a trader, instrument or rule, with how they were resolved |
 | `list_users` | read | People who can be assigned or escalated to, with their roles |
-| `add_comment` | write, confirmed | The new timeline entry, recorded as via Claude |
-| `acknowledge_alert` | write, confirmed | The alert moved from Open to In Progress |
+| `add_comment` | write, queued for approval | A pending request and its approval link; once approved, a timeline entry marked via Claude |
+| `acknowledge_alert` | write, queued for approval | A pending request; once approved, the alert moves from Open to In Progress |
 
-Escalate, close and reopen stay in the web app for phase 1. In phase 2 they move to the interactive UI in Cowork, where the human clicks the button.
+Escalate, close and reopen stay in the web app for phase 1. In phase 2 they move to the interactive UI in Cowork, where the human clicks the button. The sixth read tool, `get_action_request`, lets Claude check whether the user approved, rejected or couldn't apply a request.

@@ -9,7 +9,7 @@ Six scripted workflows show an analyst starting an investigation in Claude and f
 | # | Workflow | Client | Phase | What it shows off | Time |
 | --- | --- | --- | --- | --- | --- |
 | W1 | Morning triage | Cowork | 1 | Search in plain language, then a deep link to the same filtered view | 2 min |
-| W2 | Investigate and recommend | Cowork | 1 | A reasoned recommendation, then a write confirmed by the human | 4 min |
+| W2 | Investigate and recommend | Cowork | 1 | A reasoned recommendation, then a write the human approves in the app's access queue | 4 min |
 | W3 | Pattern across alerts | Cowork | 1 | Claude spots a repeat offender; the human escalates in the app | 3 min |
 | W4 | Reopen a closed alert | Cowork | 1 | Using history: new evidence revisits an earlier decision | 2 min |
 | W5 | Shift handover | Claude Code | 1 | The same MCP server works in a second client | 2 min |
@@ -30,15 +30,15 @@ The analyst finds their work without opening the app, then lands on exactly the 
 
 ## W2 Investigate and recommend (main demo)
 
-Claude works through a spoofing alert against the rule's criteria and recommends a next step. The human approves posting it to the audit trail.
+Claude works through a spoofing alert against the rule's criteria and recommends a next step. The human approves it in the app's access queue before it reaches the audit trail.
 
 **Prompt:** "Investigate ALT-1042 and tell me what I should do with it."
 
 1. The `investigate-alert` skill loads. Claude calls `get_alert`, `get_alert_timeline` and `find_related_alerts`.
 2. Claude goes through the data tab: the order-to-trade ratio, cancels within 500 ms of the opposite-side fill, and the share of large resting orders on one side of the book. It tests each against the rule's indicators.
 3. Claude recommends one action, for example "escalate to Compliance Lead", with three supporting facts, one fact against, and a confidence level.
-4. Claude offers to acknowledge the alert and post the recommendation as a comment. **The client asks for confirmation**, and the presenter approves.
-5. **Show:** click the alert link. The status is In Progress and the timeline has Claude's comment, marked "via Claude" under the demo user's name.
+4. Claude offers to acknowledge the alert and post the recommendation as a comment. When the presenter agrees, Claude submits both as action requests and replies with an approval link, saying nothing has changed yet. **The presenter opens the link, sees Claude's rationale and the exact comment text in the queue, and approves**.
+5. **Show:** ask Claude "did that go through?" It checks the requests and confirms. In the app the status is In Progress and the timeline shows the comment under the presenter's name, marked "via Claude, approved by" them.
 
 **Watch for:** the recommendation must cite numbers that appear in the data tab. Rehearse with the tab open next to Cowork.
 
@@ -51,7 +51,7 @@ Claude connects alerts that each look minor into one pattern. Escalation stays a
 1. Claude calls `search_alerts` (trader T-0412, any status, last 90 days) and `find_related_alerts`.
 2. Claude finds four alerts in seven weeks across two rules (layering and wash trades), two of them closed as false positives by different analysts.
 3. Claude recommends escalating to the Compliance Lead and explains why each closure looked reasonable on its own but not together.
-4. Claude doesn't escalate, because phase 1 has no escalate tool. It links to the open alert's Assignees tab.
+4. Claude doesn't escalate, because phase 1 has no escalate tool. It links to the in-progress T-0412 alert, where the assignees panel sits on the overview.
 5. **Show:** escalate in the app. The escalation appears in the history and the Compliance Lead is added as an assignee. The status stays In Progress.
 
 **Watch for:** the audience asking "why didn't Claude just escalate?" That's the cue for the "Claude advises, human acts" point.
@@ -109,9 +109,9 @@ The seed must include these "story" records alongside about 40 background alerts
 
 ## Rehearsal checklist
 
-- [ ] Restart the backend so the seed is clean (writes from earlier runs are gone)
+- [ ] Restart the backend so the seed is clean (writes from earlier runs are gone), and check the approval setting is on for the presenter's user
 - [ ] Web app and MCP server use the same app base URL
-- [ ] The Cowork connector shows as connected and lists all 7 tools
+- [ ] The Cowork connector shows as connected and lists all 8 tools
 - [ ] The plugin is installed and the `investigate-alert` skill appears
 - [ ] Run W1 to W5 once end to end and check every deep link opens the right view
 - [ ] Restart the backend again before going live
