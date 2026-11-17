@@ -1,0 +1,5 @@
+{
+  "name": "alerts-demo",
+  "version": "0.1.0",
+  "description": "Investigate trade-surveillance alerts from Claude: search, test the evidence against the rule, recommend one next step, and hand the analyst into the case management app through deep links."
+}
