@@ -1,0 +1,3 @@
+@import '@app/ui/styles.css';
+/* This package's own classes (the shared components are scanned by @app/ui). */
+@source './';

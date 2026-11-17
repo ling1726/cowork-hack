@@ -7,6 +7,7 @@
   "ignorePatterns": [
     "node_modules",
     "dist",
+    "dist-types",
     "test-results",
     "playwright-report",
     "packages/api-client/src/schema.d.ts",

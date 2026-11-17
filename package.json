@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n server,web,mcp \"pnpm --filter @app/server dev\" \"pnpm --filter @app/web dev\" \"pnpm --filter @app/mcp-server dev\"",
+    "dev": "pnpm build:ui && concurrently -n server,web,mcp \"pnpm --filter @app/server dev\" \"pnpm --filter @app/web dev\" \"pnpm --filter @app/mcp-server dev\"",
+    "build:ui": "pnpm --filter @app/mcp-ui build",
     "test": "vitest run",
     "typecheck": "tsc -b",
     "lint": "oxlint && oxfmt --check",
