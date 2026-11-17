@@ -6,10 +6,7 @@ import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { AGENT_TOKEN, makeApp } from '../../server/test/helpers.ts';
 import { startHttp } from '../src/server.ts';
-
-export const UI_CAPABILITIES = {
-  extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: ['text/html;profile=mcp-app'] } },
-};
+import { UI_CAPABILITIES } from './helpers.ts';
 
 let mcpUrl: string;
 let stopBackend: () => void;

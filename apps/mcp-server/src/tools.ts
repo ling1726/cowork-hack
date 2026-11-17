@@ -9,6 +9,8 @@ import {
   actionRequestUrl,
   alertListUrl,
   alertUrl,
+  RESOURCE_URIS,
+  type ActionRequestDetail,
   type AlertListSearch,
 } from '@app/domain';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -23,6 +25,14 @@ import {
   userLine,
   type Names,
 } from './format.ts';
+import {
+  completeViews,
+  registerDecisionTools,
+  registerViews,
+  requestView,
+  toolUiMeta,
+  withView,
+} from './ui.ts';
 
 export interface McpDeps {
   api: ApiClient;
@@ -30,6 +40,10 @@ export interface McpDeps {
   appBaseUrl: string;
   /** The user Claude acts for (also what the API client sends as X-User-Id). */
   actingUserId: string;
+  /** Sends the Cowork token: approve/reject on behalf of the acting user, from the card only. */
+  decisionApi?: ApiClient;
+  /** Where the built MCP App views live (`apps/mcp-ui/dist`). */
+  uiDir?: string;
 }
 
 const ok = (text: string, structuredContent: Record<string, unknown>): CallToolResult => ({
@@ -108,9 +122,16 @@ const APP_FILTERS = [
 ] as const;
 const NOT_IN_APP = ['updatedFrom', 'updatedTo', 'involvedUserId'] as const;
 
-/** `opts.ui`: the client renders MCP Apps (wired up in ui.ts). */
-export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boolean }): void {
+/**
+ * `opts.ui`: the client renders MCP Apps. The views are offered only if their bundles are built;
+ * otherwise this session is the phase 1 text surface, unchanged.
+ */
+export function registerTools(server: McpServer, deps: McpDeps, opts: { ui: boolean }): void {
   const { api, appBaseUrl: base } = deps;
+  const views = opts.ui ? completeViews(deps.uiDir) : undefined;
+  const viewDeps = { api, appBaseUrl: base, canDecide: deps.decisionApi !== undefined };
+  /** Tool config `_meta` naming its view, in UI sessions only. */
+  const uiMeta = (uri: string) => (views ? { _meta: toolUiMeta(uri) } : {});
 
   const users = async () => unwrap(await api.GET('/api/users'));
   const names = async (): Promise<Names> => namesOf(await users());
@@ -124,6 +145,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         'Find alerts with structured filters and free text. Returns the top matches, the total, and a link that opens the same search in the app.',
       inputSchema: SearchInput,
       annotations: { title: 'Search alerts', readOnlyHint: true, openWorldHint: false },
+      ...uiMeta(RESOURCE_URIS.alertList),
     },
     safe(async (input) => {
       const { limit, ...filters } = input;
@@ -145,11 +167,12 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
           ? `Open this search in the app: ${listUrl}`
           : 'The app cannot show this exact search (it filters on activity or update time), so link the individual alerts.',
       ];
-      return ok(lines.join('\n'), {
+      const res = ok(lines.join('\n'), {
         items,
         total: result.total,
         ...(listUrl ? { listUrl } : {}),
       });
+      return views ? withView(res, { users: await users() }) : res;
     }),
   );
 
@@ -161,6 +184,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         'Full alert: summary, rule indicators and thresholds, highlights, data tabs, assignees and which actions are allowed.',
       inputSchema: { alertId },
       annotations: { title: 'Get alert', readOnlyHint: true, openWorldHint: false },
+      ...uiMeta(RESOURCE_URIS.alertCard),
     },
     safe(async ({ alertId: id }) => {
       const alert = unwrap(await api.GET('/api/alerts/{id}', { params: { path: { id } } }));
@@ -171,7 +195,13 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         materials: alertUrl(base, id, { tab: 'materials' }),
         data: alertUrl(base, id, { tab: 'data' }),
       };
-      return ok(alertText(alert, url, tabUrls, await names()), { alert, url, tabUrls });
+      const all = await users();
+      const res = ok(alertText(alert, url, tabUrls, namesOf(all)), { alert, url, tabUrls });
+      if (!views) return res;
+      const timeline = unwrap(
+        await api.GET('/api/alerts/{id}/timeline', { params: { path: { id } } }),
+      );
+      return withView(res, { recentEvents: timeline.slice(-3), users: all });
     }),
   );
 
@@ -272,14 +302,21 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
     if ('actionRequest' in data) {
       const approveUrl = actionRequestUrl(base, data.actionRequest.id);
       const name = (await names())(data.actionRequest.onBehalfOf);
-      return ok(pendingText(name, approveUrl), {
+      const res = ok(pendingText(name, approveUrl), {
         status: 'pending_approval',
         requestId: data.actionRequest.id,
         approveUrl,
       });
+      if (!views) return res;
+      const detail = unwrap(
+        await api.GET('/api/action-requests/{id}', {
+          params: { path: { id: data.actionRequest.id } },
+        }),
+      ) as ActionRequestDetail;
+      return withView(res, await requestView(viewDeps, detail));
     }
     const url = timelineUrl(id);
-    return ok(
+    const res = ok(
       `${applied} (applied immediately because approval is switched off for this user). ${url}`,
       {
         status: 'applied',
@@ -287,6 +324,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         url,
       },
     );
+    return views ? withView(res, { kind: 'applied', url, summary: applied }) : res;
   };
 
   server.registerTool(
@@ -307,6 +345,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         idempotentHint: false,
         openWorldHint: false,
       },
+      ...uiMeta(RESOURCE_URIS.actionRequest),
     },
     safe(async ({ alertId: id, body, rationale: why }) =>
       writeResult(
@@ -336,6 +375,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         idempotentHint: false,
         openWorldHint: false,
       },
+      ...uiMeta(RESOURCE_URIS.actionRequest),
     },
     safe(async ({ alertId: id, rationale: why }) =>
       writeResult(
@@ -359,6 +399,7 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
         'Status of a request Claude submitted: pending, approved (with the resulting event), rejected (with the reason) or failed (with the cause).',
       inputSchema: { requestId: z.string().min(1).describe('Request id, for example AR-0001') },
       annotations: { title: 'Get action request', readOnlyHint: true, openWorldHint: false },
+      ...uiMeta(RESOURCE_URIS.actionRequest),
     },
     safe(async ({ requestId }) => {
       const [request, name] = await Promise.all([
@@ -391,7 +432,15 @@ export function registerTools(server: McpServer, deps: McpDeps, _opts: { ui: boo
           );
           break;
       }
-      return ok(lines.join('\n'), { request, url, approveUrl });
+      const res = ok(lines.join('\n'), { request, url, approveUrl });
+      return views ? withView(res, await requestView(viewDeps, request)) : res;
     }),
   );
+
+  if (views) {
+    registerViews(server, views);
+    if (deps.decisionApi) {
+      registerDecisionTools(server, { ...viewDeps, decisionApi: deps.decisionApi }, safe);
+    }
+  }
 }

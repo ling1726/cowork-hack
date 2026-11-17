@@ -5,6 +5,8 @@ export interface McpEnv {
   appBaseUrl: string;
   actingUserId: string;
   agentToken: string;
+  /** Lets the Cowork request card approve or reject (must match the API server's). */
+  coworkToken?: string;
   /** Extra Host names to accept besides loopback, e.g. a tunnel's hostname. */
   allowedHosts: string[];
 }
@@ -31,6 +33,7 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     appBaseUrl: trimSlash(source.APP_BASE_URL || 'http://localhost:5173'),
     actingUserId: source.ACTING_USER_ID || 'U-01',
     agentToken,
+    ...(source.COWORK_TOKEN ? { coworkToken: source.COWORK_TOKEN } : {}),
     allowedHosts: (source.ALLOWED_HOSTS ?? '')
       .split(',')
       .map((h) => h.trim())

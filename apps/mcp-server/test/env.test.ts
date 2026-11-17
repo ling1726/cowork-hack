@@ -36,4 +36,9 @@ describe('loadEnv', () => {
     });
     expect(() => loadEnv({ AGENT_TOKEN: 't', MCP_PORT: 'abc' })).toThrow(/PORT/);
   });
+
+  it('reads COWORK_TOKEN when set and leaves it out when empty', () => {
+    expect(loadEnv({ AGENT_TOKEN: 't', COWORK_TOKEN: 'c' }).coworkToken).toBe('c');
+    expect(loadEnv({ AGENT_TOKEN: 't', COWORK_TOKEN: '' }).coworkToken).toBeUndefined();
+  });
 });
