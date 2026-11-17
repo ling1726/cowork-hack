@@ -9,7 +9,7 @@
     "typecheck": "tsc -b",
     "lint": "oxlint && oxfmt --check",
     "format": "oxfmt",
-    "e2e": "pnpm --filter @app/web e2e"
+    "e2e": "pnpm --filter @app/web e2e && pnpm --filter @app/mcp-ui e2e"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

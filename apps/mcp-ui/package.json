@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsx scripts/build.ts"
+    "build": "tsx scripts/build.ts",
+    "host": "vite --config test-host/vite.config.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@app/domain": "workspace:*",
@@ -16,6 +18,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "4.3.5",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.3.3",
