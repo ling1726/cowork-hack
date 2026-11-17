@@ -51,7 +51,7 @@ First time only: `pnpm --filter @app/web exec playwright install chromium`.
 ```
 packages/domain       Zod schemas, state machine, search-param codec and link builder
 packages/api-client   OpenAPI types and a typed client (regenerate: pnpm --filter @app/server openapi)
-packages/ui           Presentational Fluent UI components (reused by MCP Apps in phase 2)
+packages/ui           shadcn/ui (Base UI) + Tailwind v4 components (reused by MCP Apps in phase 2)
 apps/server           Hono REST API, in-memory store, seed, access queue
 apps/web              Vite + React app
 apps/mcp-server       MCP over Streamable HTTP
