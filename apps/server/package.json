@@ -1,0 +1,11 @@
+{
+  "name": "@app/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@app/domain": "workspace:*",
+    "@faker-js/faker": "^10.6.0",
+    "minisearch": "^7.2.0"
+  }
+}
