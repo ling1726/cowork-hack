@@ -83,16 +83,19 @@ The same plugin and MCP server work from a terminal, which shows it isn't tied t
 
 ## W6 Act inline (phase 2)
 
-The alert card from the web app renders inside Cowork. The analyst acts without switching windows, or opens the app with one click.
+The app's own UI renders inside Cowork. Claude asks; the analyst decides on the card; the app and Cowork stay in step. Design: `docs/superpowers/specs/2026-11-17-mcp-apps-phase2-design.md`.
 
-**Prompt:** "Show me ALT-1042."
+1. **"Show me open high-severity EU Equities alerts."** `search_alerts` renders the alert list: the app's table, sortable, with severity and status badges. **Show:** click **Investigate** on ALT-1042. It sends "Investigate ALT-1042" to Claude as your next message.
+2. **Claude investigates.** `get_alert` renders the alert card (header, highlights, recent activity). Claude recommends acknowledging and commenting and, once you agree, submits both. Each renders a **request card**: what Claude asks for, its rationale, the payload, Approve and Reject.
+3. **Show:** click **Approve** on the acknowledge card. It reads "Approved by Priya Shah in Cowork", and the alert card turns **In Progress** within a few seconds. Claude is told about the decision and carries on when you next speak. Click **Open in app**: the timeline shows "via Claude · approved by Priya Shah in Cowork".
+4. **(Optional) Show "one system":** approve or reject the comment request **in the app** instead. Its card in Cowork flips on its own within a few seconds.
 
-1. `get_alert` returns its usual JSON plus a `ui://alerts/alert-card` resource. Cowork renders the card using the same Fluent components as the app.
-2. The card shows status, assignees, highlight attributes and the latest three timeline entries.
-3. **Show:** click Acknowledge on the card. The card calls the tool, the status badge updates, and Claude sees the change.
-4. **Show:** click "Open in app". The deep link goes to the same alert, already In Progress.
+**Watch for:**
 
-**Watch for:** the card must look identical to the app's header. Any visible difference undermines the "shared UI" point.
+- The cards must look like the app. Any visible difference undermines the "shared UI" point.
+- Investigate needs the host to accept messages from a card; if it doesn't, the button opens the alert in the app instead.
+- Run `pnpm build:ui` before starting the MCP server (`pnpm dev` does it), and restart the MCP server after rebuilding the views.
+- If Cowork misbehaves, show the same cards in the test host: `pnpm --filter @app/mcp-ui host`, then http://localhost:5174/?tool=get_alert&args={"alertId":"ALT-1042"}.
 
 ## Seed data each workflow depends on
 
