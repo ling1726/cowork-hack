@@ -3,6 +3,7 @@ import { buttonVariants, Skeleton } from '@app/ui';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { ArrowRight, CircleAlert } from 'lucide-react';
 import { AlertLink } from '../components/AlertLink.tsx';
+import { OpenInCoworkButton } from '../components/OpenInCowork.tsx';
 import { RequestCard } from '../components/RequestCard.tsx';
 import { useActionRequest } from '../hooks/useActionRequests.ts';
 
@@ -46,6 +47,13 @@ function RequestPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <RequestCard detail={data} />
+      {data.status === 'pending' && (
+        <div>
+          <OpenInCoworkButton
+            coworkCase={{ kind: 'explain_request', requestId: data.id, alertId: data.alertId }}
+          />
+        </div>
+      )}
       {data.status !== 'pending' && (
         <AlertLink id={data.alertId}>
           <span className={buttonVariants({ variant: 'outline' })}>

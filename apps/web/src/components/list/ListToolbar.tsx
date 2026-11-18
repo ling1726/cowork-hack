@@ -14,6 +14,7 @@ import { RotateCcw, X } from 'lucide-react';
 import { useCallback, useId } from 'react';
 import { useMeta, useUsers } from '../../hooks.ts';
 import { useUiStore } from '../../store/ui-store.ts';
+import { OpenInCoworkButton } from '../OpenInCowork.tsx';
 import { SearchBox } from '../SearchBox.tsx';
 import { FacetedFilter } from './FacetedFilter.tsx';
 
@@ -115,6 +116,11 @@ export function ListToolbar({ search, onChange, onClear }: ListToolbarProps) {
             Reset
           </Button>
         )}
+        <div className="ml-auto">
+          <OpenInCoworkButton
+            coworkCase={{ kind: 'triage', base: window.location.origin, search }}
+          />
+        </div>
       </div>
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5" aria-label="Active filters">

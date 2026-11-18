@@ -14,9 +14,10 @@ import {
   SidebarSeparator,
 } from '@app/ui';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Inbox, Settings, ShieldAlert, Siren } from 'lucide-react';
+import { Inbox, Settings, ShieldAlert, Siren, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { usePendingCount } from '../../hooks/useActionRequests.ts';
+import { OpenInCoworkDialog } from '../OpenInCowork.tsx';
 import { SettingsDialog } from '../SettingsDialog.tsx';
 import { UserSwitcher } from './UserSwitcher.tsx';
 
@@ -24,6 +25,7 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { data: pending = 0 } = usePendingCount();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [handoverOpen, setHandoverOpen] = useState(false);
   const nav = [
     { to: '/alerts', label: 'Alerts', icon: Siren },
     { to: '/queue', label: 'Queue', icon: Inbox },
@@ -81,6 +83,16 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
+              data-testid="cowork-handover"
+              tooltip="Shift handover"
+              onClick={() => setHandoverOpen(true)}
+            >
+              <Sparkles />
+              <span>Shift handover</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
               data-testid="settings-button"
               aria-label="Settings"
               tooltip="Settings"
@@ -96,6 +108,12 @@ export function AppSidebar() {
       </SidebarFooter>
       <SidebarRail />
       {settingsOpen && <SettingsDialog onClose={() => setSettingsOpen(false)} />}
+      {handoverOpen && (
+        <OpenInCoworkDialog
+          coworkCase={{ kind: 'handover' }}
+          onClose={() => setHandoverOpen(false)}
+        />
+      )}
     </Sidebar>
   );
 }

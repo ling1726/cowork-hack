@@ -61,3 +61,37 @@ test('second opinion appears only on a closed alert; pattern names the trader', 
     coworkPrompt({ kind: 'second_opinion', alertId: 'ALT-0987' }),
   );
 });
+
+test('triage carries the current filters', async ({ page }) => {
+  await page.goto('/alerts?status=open&severity=high&desk=eu-equities&q=layering');
+  await page.getByTestId('cowork-triage').click();
+  await expect(prompt(page)).toHaveValue(
+    coworkPrompt({
+      kind: 'triage',
+      base: 'http://localhost:5173',
+      search: { status: ['open'], severity: ['high'], desk: ['eu-equities'], q: 'layering' },
+    }),
+  );
+});
+
+test('explain shows on a pending request only', async ({ page, agentRequest }) => {
+  const { actionRequest } = (await agentRequest('/api/alerts/ALT-1042/acknowledge', {
+    rationale: 'Starting the investigation.',
+  })) as { actionRequest: { id: string } };
+  const id = actionRequest.id;
+  await page.goto(`/queue/${id}`);
+  await page.getByTestId('cowork-explain_request').click();
+  await expect(prompt(page)).toHaveValue(
+    coworkPrompt({ kind: 'explain_request', requestId: id, alertId: 'ALT-1042' }),
+  );
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await page.getByRole('button', { name: 'Approve' }).click();
+  await expect(page.getByTestId('request-status')).toHaveText('Approved');
+  await expect(page.getByTestId('cowork-explain_request')).toHaveCount(0);
+});
+
+test('sidebar offers the shift handover', async ({ page }) => {
+  await page.goto('/alerts');
+  await page.getByTestId('cowork-handover').click();
+  await expect(open(page)).toHaveAttribute('href', coworkLink(coworkPrompt({ kind: 'handover' })));
+});
