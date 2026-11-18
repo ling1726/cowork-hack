@@ -33,7 +33,7 @@ The seed is deterministic: restart `pnpm dev` before a rehearsal or a live run f
 
 ## Install the Claude plugin
 
-The plugin (`plugin/`) bundles the MCP connection and the `investigate-alert` skill.
+The plugin (`plugin/`) bundles the MCP connection and the `investigate-alert` skill. The MCP server also sends that playbook as its MCP instructions, so a connector added by URL alone (Cowork, through a tunnel) gets it without the plugin.
 
 - **Claude Code:** `claude --plugin-dir ./plugin`, then check `/mcp` shows `alerts` with 8 tools.
 - **Cowork:** see `docs/spike-notes.md`. The exact steps are recorded there once verified.

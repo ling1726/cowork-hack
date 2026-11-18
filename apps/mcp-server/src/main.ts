@@ -1,6 +1,7 @@
 import { createApiClient } from '@app/api-client';
 import { fileURLToPath } from 'node:url';
 import { loadEnv } from './env.ts';
+import { loadPlaybook } from './playbook.ts';
 import { startHttp } from './server.ts';
 
 // Transport: the SDK's WebStandardStreamableHTTPServerTransport (present in @modelcontextprotocol/sdk
@@ -21,11 +22,15 @@ const decisionApi = env.coworkToken
     })
   : undefined;
 const uiDir = fileURLToPath(new URL('../../mcp-ui/dist', import.meta.url));
+const instructions = loadPlaybook(
+  fileURLToPath(new URL('../../../plugin/skills/investigate-alert/SKILL.md', import.meta.url)),
+);
 
 const server = await startHttp({
   port: env.port,
   host: env.host,
   allowedHosts: env.allowedHosts,
+  ...(instructions ? { instructions } : {}),
   deps: {
     api,
     appBaseUrl: env.appBaseUrl,

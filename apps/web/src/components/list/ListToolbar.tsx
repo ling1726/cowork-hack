@@ -117,9 +117,7 @@ export function ListToolbar({ search, onChange, onClear }: ListToolbarProps) {
           </Button>
         )}
         <div className="ml-auto">
-          <OpenInCoworkButton
-            coworkCase={{ kind: 'triage', base: window.location.origin, search }}
-          />
+          <OpenInCoworkButton coworkCase={{ kind: 'triage', search }} />
         </div>
       </div>
       {chips.length > 0 && (

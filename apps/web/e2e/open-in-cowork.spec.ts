@@ -68,7 +68,6 @@ test('triage carries the current filters', async ({ page }) => {
   await expect(prompt(page)).toHaveValue(
     coworkPrompt({
       kind: 'triage',
-      base: 'http://localhost:5173',
       search: { status: ['open'], severity: ['high'], desk: ['eu-equities'], q: 'layering' },
     }),
   );
