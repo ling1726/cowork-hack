@@ -55,4 +55,6 @@ Verified by a person on 2026-11-18 with `spikes/open-in-cowork.html` (since remo
 - After Send, Claude used the `alerts` connector and the `investigate-alert` skill without further help.
 - Reference: support.claude.com article 14729294 ("Open Claude Desktop with a link"). `q` is truncated at about 14,000 characters; the prompt is prefilled, not sent.
 
+Since 2026-11-18 the prompts name the tools to call (no skill, no app URL), and the MCP server sends the playbook as its MCP instructions, so a connector added by URL (no plugin) gets it too. Re-check once: does Claude follow the playbook and call the tools named in the prompt? ______
+
 Still to re-check at each rehearsal: a reported bug (anthropics/claude-code #73593) where, with the app already running, the prompt renders without a Send button. If it bites, quit Claude Desktop first or use **Copy prompt**.
