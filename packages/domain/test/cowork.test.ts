@@ -55,5 +55,9 @@ describe('coworkLink', () => {
   });
   it('caps the prompt at 14,000 characters before encoding', () =>
     expect(q(coworkLink('x'.repeat(COWORK_PROMPT_MAX + 500)))).toHaveLength(COWORK_PROMPT_MAX));
+  it('never cuts an emoji in half at the 14,000-character limit', () =>
+    expect(q(coworkLink('x'.repeat(COWORK_PROMPT_MAX - 1) + '😀'))).toHaveLength(
+      COWORK_PROMPT_MAX - 1,
+    ));
   it('returns an empty string for a blank prompt', () => expect(coworkLink('  \n ')).toBe(''));
 });

@@ -85,7 +85,7 @@ test('explain shows on a pending request only', async ({ page, agentRequest }) =
     coworkPrompt({ kind: 'explain_request', requestId: id, alertId: 'ALT-1042' }),
   );
   await page.getByRole('button', { name: 'Cancel' }).click();
-  await page.getByRole('button', { name: 'Approve' }).click();
+  await page.getByRole('button', { name: 'Approve', exact: true }).click();
   await expect(page.getByTestId('request-status')).toHaveText('Approved');
   await expect(page.getByTestId('cowork-explain_request')).toHaveCount(0);
 });

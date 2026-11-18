@@ -136,7 +136,7 @@ describe('coworkLink', () => {
 Run: `pnpm vitest run packages/domain/test/cowork.test.ts`
 Expected: FAIL, `coworkPrompt` is not exported.
 
-- [ ] **Step 3: Implement `packages/domain/src/cowork.ts`** with the signatures above and add the re-export to `index.ts`. Prompt texts are exactly the strings in the tests. Labels: `investigate: 'Investigate with Cowork'`, `second_opinion: 'Second opinion'`, `pattern: 'Check for a pattern'`, `triage: 'Triage this list'`, `explain_request: 'Explain before I approve'`, `handover: 'Shift handover'`. `coworkLink` slices to `COWORK_PROMPT_MAX` and then calls `encodeURIComponent`. Use a `switch` on `kind` with an exhaustive `never` check.
+- [ ] **Step 3: Implement `packages/domain/src/cowork.ts`** with the signatures above and add the re-export to `index.ts`. Prompt texts are exactly the strings in the tests. Labels: `investigate: 'Investigate with Cowork'`, `second_opinion: 'Second opinion'`, `pattern: 'Check for a pattern'`, `triage: 'Triage this list'`, `explain_request: 'Explain this request'`, `handover: 'Shift handover'`. `coworkLink` slices to `COWORK_PROMPT_MAX` and then calls `encodeURIComponent`. Use a `switch` on `kind` with an exhaustive `never` check.
 
 - [ ] **Step 4: Run to verify it passes**
 

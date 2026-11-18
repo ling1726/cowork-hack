@@ -2,6 +2,7 @@ import { COWORK_CASE_LABELS, coworkLink, coworkPrompt, type CoworkCase } from '@
 import {
   Button,
   buttonVariants,
+  cn,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -48,6 +49,7 @@ export function OpenInCoworkDialog({ coworkCase, onClose }: OpenInCoworkDialogPr
         <Textarea
           aria-label="Prompt"
           rows={8}
+          className="field-sizing-fixed max-h-[50vh] overflow-y-auto"
           value={text}
           onChange={(e) => {
             setText(e.target.value);
@@ -67,7 +69,10 @@ export function OpenInCoworkDialog({ coworkCase, onClose }: OpenInCoworkDialogPr
           </Button>
           <a
             data-testid="open-in-cowork"
-            className={buttonVariants()}
+            className={cn(
+              buttonVariants(),
+              'aria-disabled:pointer-events-none aria-disabled:opacity-50',
+            )}
             {...(href
               ? { href, onClick: () => setStatus(AFTER_OPEN) }
               : { 'aria-disabled': true, role: 'link' })}

@@ -22,7 +22,7 @@ export const COWORK_CASE_LABELS: Record<CoworkCaseKind, string> = {
   second_opinion: 'Second opinion',
   pattern: 'Check for a pattern',
   triage: 'Triage this list',
-  explain_request: 'Explain before I approve',
+  explain_request: 'Explain this request',
   handover: 'Shift handover',
 };
 
@@ -55,5 +55,8 @@ function promptBody(c: CoworkCase): string {
 /** A `claude://cowork/new` link that opens Cowork with the prompt prefilled, or '' for a blank prompt. */
 export function coworkLink(prompt: string): string {
   if (!prompt.trim()) return '';
-  return `claude://cowork/new?q=${encodeURIComponent(prompt.slice(0, COWORK_PROMPT_MAX))}`;
+  let cut = prompt.slice(0, COWORK_PROMPT_MAX);
+  // Don't leave half of a surrogate pair: encodeURIComponent throws on a lone surrogate.
+  if (/[\uD800-\uDBFF]$/.test(cut)) cut = cut.slice(0, -1);
+  return `claude://cowork/new?q=${encodeURIComponent(cut)}`;
 }

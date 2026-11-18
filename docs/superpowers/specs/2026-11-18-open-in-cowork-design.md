@@ -37,7 +37,7 @@ Each prompt starts with "Using the alerts connector and the investigate-alert sk
 | 2 | Alert page, when status is Closed | Second opinion | "review the closure of {id}. Quote the closing note, compare it with related alerts, and say whether it should be reopened." |
 | 3 | Alert page, Details panel trader row | Check for a pattern | "check whether trader {traderName} ({traderId}) has a pattern across alerts, any status, and how each was closed." |
 | 4 | List `/alerts` toolbar | Triage this list | "triage the alerts at {listUrl}: search with the same filters and rank them." (filters described in words too) |
-| 5 | Request `/queue/$requestId` | Explain before I approve | "explain request {requestId} on {alertId}: what it changes, why you asked for it, and what I should check before approving." |
+| 5 | Request `/queue/$requestId` | Explain this request | "explain request {requestId} on {alertId}: what it changes, why you asked for it, and what I should check before approving." |
 | 6 | Sidebar | Shift handover | "write my shift handover." |
 
 ## UI
