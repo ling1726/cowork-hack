@@ -47,3 +47,12 @@ Phase 2 renders the alert list, the alert card and request cards inside Cowork, 
 
 Decision rules: if 3 fails (Claude can see or call the approve tool), stop and revisit option C in the phase 2 design before demoing. If 6 fails, move the view payload into app-only read tools that the card calls on load. If `sendMessage` fails, Investigate already falls back to opening the app.
 
+## Cowork: Open in Cowork links
+
+Verified by a person on 2026-11-18 with `spikes/open-in-cowork.html` (since removed):
+
+- `claude://cowork/new?q=<prompt>` opens a new Cowork session in Claude Desktop with the prompt prefilled and sendable.
+- After Send, Claude used the `alerts` connector and the `investigate-alert` skill without further help.
+- Reference: support.claude.com article 14729294 ("Open Claude Desktop with a link"). `q` is truncated at about 14,000 characters; the prompt is prefilled, not sent.
+
+Still to re-check at each rehearsal: a reported bug (anthropics/claude-code #73593) where, with the app already running, the prompt renders without a Send button. If it bites, quit Claude Desktop first or use **Copy prompt**.

@@ -32,6 +32,7 @@ import { DataTabView } from '../components/DataTabView.tsx';
 import { DetailsPanel } from '../components/detail/DetailsPanel.tsx';
 import { PendingRequestsBanner } from '../components/PendingRequestsBanner.tsx';
 import { MaterialsTab } from '../components/MaterialsTab.tsx';
+import { OpenInCoworkButton } from '../components/OpenInCowork.tsx';
 import { AcknowledgeDialog } from '../components/dialogs/AcknowledgeDialog.tsx';
 import { AddLinkDialog } from '../components/dialogs/AddLinkDialog.tsx';
 import { AssigneesDialog } from '../components/dialogs/AssigneesDialog.tsx';
@@ -167,6 +168,15 @@ function AlertDetailPage() {
         }}
         pendingCount={alert.pendingActionRequestIds.length}
       />
+      <div className="flex flex-wrap gap-2" data-testid="cowork-actions">
+        <OpenInCoworkButton coworkCase={{ kind: 'investigate', alertId: alert.id }} />
+        {alert.status === 'closed' && (
+          <OpenInCoworkButton coworkCase={{ kind: 'second_opinion', alertId: alert.id }} />
+        )}
+        <OpenInCoworkButton
+          coworkCase={{ kind: 'pattern', traderId: alert.trader.id, traderName: alert.trader.name }}
+        />
+      </div>
       <PendingRequestsBanner requestIds={alert.pendingActionRequestIds} />
       <AlertHighlights highlights={alert.highlights} />
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
