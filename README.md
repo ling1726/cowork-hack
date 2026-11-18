@@ -38,6 +38,8 @@ The plugin (`plugin/`) bundles the MCP connection and the `investigate-alert` sk
 - **Claude Code:** `claude --plugin-dir ./plugin`, then check `/mcp` shows `alerts` with 8 tools.
 - **Cowork:** see `docs/spike-notes.md`. The exact steps are recorded there once verified.
 
+**From the app into Cowork.** The app's sparkle buttons (Investigate with Cowork, Second opinion, Check for a pattern, Triage this list, Explain before I approve, Shift handover) open a dialog with an editable prompt. **Open in Cowork** follows a `claude://cowork/new?q=…` link, which needs Claude Desktop with this plugin installed; nothing is sent until you press Send in Cowork. **Copy prompt** is the fallback.
+
 ## Tests
 
 ```bash

@@ -117,6 +117,7 @@ The seed must include these "story" records alongside about 40 background alerts
 - [ ] The Cowork connector shows as connected and lists all 8 tools
 - [ ] The plugin is installed and the `investigate-alert` skill appears
 - [ ] Run W1 to W5 once end to end and check every deep link opens the right view
+- [ ] Click "Investigate with Cowork" on ALT-1051 once with Claude Desktop already open, and check the Send button appears
 - [ ] Restart the backend again before going live
 - [ ] Fallback: a screen recording of W2 in case the network or Cowork misbehaves
 
