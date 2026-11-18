@@ -22,10 +22,15 @@ function hostnameOf(hostHeader: string): string {
 export interface McpServerOptions {
   /** The client declared MCP Apps support at initialise: offer the Cowork views. */
   ui: boolean;
+  /** Sent to every client at initialise: the investigation playbook (see playbook.ts). */
+  instructions?: string;
 }
 
 export function createMcpServer(deps: McpDeps, opts: McpServerOptions): McpServer {
-  const server = new McpServer({ name: 'alerts', version: '0.1.0' });
+  const server = new McpServer(
+    { name: 'alerts', version: '0.1.0' },
+    opts.instructions ? { instructions: opts.instructions } : {},
+  );
   registerTools(server, deps, opts);
   return server;
 }
@@ -56,6 +61,8 @@ export async function startHttp(opts: {
   deps: McpDeps;
   /** Host names accepted besides loopback (for example a tunnel hostname). */
   allowedHosts?: string[];
+  /** MCP instructions for every session (the playbook). */
+  instructions?: string;
 }): Promise<RunningServer> {
   const allowed = new Set([
     ...LOOPBACK_HOSTS,
@@ -124,7 +131,10 @@ export async function startHttp(opts: {
     }
 
     const ui = getUiCapability(body.params.capabilities) !== undefined;
-    const server = createMcpServer(opts.deps, { ui });
+    const server = createMcpServer(opts.deps, {
+      ui,
+      ...(opts.instructions ? { instructions: opts.instructions } : {}),
+    });
     const transport = new WebStandardStreamableHTTPServerTransport({
       sessionIdGenerator: () => randomUUID(),
       enableJsonResponse: true,
